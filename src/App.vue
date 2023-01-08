@@ -1,13 +1,15 @@
-<template>
-    <div>
-        <github-corner />
-        <the-header />
-        <keep-alive>
-            <router-view />
-        </keep-alive>
-        <the-footer />
-        <notifications position="bottom right" />
-    </div>
+<template lang="pug">
+
+div
+    github-corner
+    the-header
+    keep-alive
+        router-view
+    the-footer
+    notifications(
+        position="bottom right"
+    )
+
 </template>
 
 <script lang="ts">
