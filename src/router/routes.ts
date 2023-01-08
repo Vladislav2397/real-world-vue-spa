@@ -56,7 +56,7 @@ export const Routes: RouteConfig[] = [
         name: RoutesNames.articleView,
         component: () =>
             import(
-                /* webpackChunkName: "articleView" */ "@/views/ArticleView.vue"
+                /* webpackChunkName: "articleView" */ "@/pages/article/View/ArticleView.vue"
             ),
     },
     {
