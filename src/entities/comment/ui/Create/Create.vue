@@ -43,7 +43,7 @@ import { isArrayOfStrings } from "@/utils/ArrayUtils"
 import { notifySuccess } from "@/utils/NotificationUtils"
 
 @Component({ components: { CommonErrorsList } })
-export default class CommentAdd extends Vue {
+export default class CommentCreate extends Vue {
     @Prop({ required: true }) slug!: string
 
     body = ""

@@ -14,8 +14,7 @@
 
 import { Component, Prop, Vue, Watch } from "vue-property-decorator"
 
-import CommentAdd from "@/components/CommentAdd.vue"
-import CommentDisplay from "@/components/CommentDisplay.vue"
+import { CommentCreate, CommentCard } from "@/entities/comment"
 import CommonLoader from "@/components/CommonLoader.vue"
 import { IComment } from "@/services/realWorldApi/models"
 import Article from "@/store/modules/Article"
@@ -23,8 +22,8 @@ import Article from "@/store/modules/Article"
 @Component({
     components: {
         CommonLoader,
-        CommentAdd,
-        CommentDisplay
+        'comment-add': CommentCreate,
+        'comment-display': CommentCard
     }
 })
 export default class ArticleComments extends Vue {

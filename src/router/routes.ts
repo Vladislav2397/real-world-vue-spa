@@ -13,7 +13,7 @@ export const Routes: RouteConfig[] = [
         path: "/login",
         name: RoutesNames.authLogin,
         component: () =>
-            import(/* webpackChunkName: "authLogin" */ "@/views/AuthLogin.vue"),
+            import(/* webpackChunkName: "authLogin" */ "@/pages/auth/login/AuthLogin.vue"),
         meta: {
             anonymousOnly: true,
         },
@@ -23,7 +23,7 @@ export const Routes: RouteConfig[] = [
         name: RoutesNames.authRegister,
         component: () =>
             import(
-                /* webpackChunkName: "authRegister" */ "@/views/AuthRegister.vue"
+                /* webpackChunkName: "authRegister" */ "@/pages/auth/register/AuthRegister.vue"
             ),
         meta: {
             anonymousOnly: true,
