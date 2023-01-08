@@ -34,7 +34,7 @@ export const Routes: RouteConfig[] = [
         name: RoutesNames.articleCreate,
         component: () =>
             import(
-                /* webpackChunkName: "articleCreate" */ "@/views/ArticleCreate.vue"
+                /* webpackChunkName: "articleCreate" */ "@/pages/article/Create/ArticleCreate.vue"
             ),
         meta: {
             requiresAuth: true,
@@ -45,7 +45,7 @@ export const Routes: RouteConfig[] = [
         name: RoutesNames.articleEdit,
         component: () =>
             import(
-                /* webpackChunkName: "articleEdit" */ "@/views/ArticleEdit.vue"
+                /* webpackChunkName: "articleEdit" */ "@/pages/article/Edit/ArticleEdit.vue"
             ),
         meta: {
             requiresAuth: true,
