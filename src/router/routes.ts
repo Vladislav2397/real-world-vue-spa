@@ -72,7 +72,7 @@ export const Routes: RouteConfig[] = [
         name: RoutesNames.profileSettings,
         component: () =>
             import(
-                /* webpackChunkName: "profileSettings" */ "@/views/ProfileSettings.vue"
+                /* webpackChunkName: "profileSettings" */ "@/pages/ProfileSettings/ProfileSettings.vue"
             ),
         meta: {
             requiresAuth: true,
