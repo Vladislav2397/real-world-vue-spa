@@ -1,11 +1,11 @@
 <template>
     <div>
         <github-corner />
-        <app-header />
+        <the-header />
         <keep-alive>
             <router-view />
         </keep-alive>
-        <app-footer />
+        <the-footer />
         <notifications position="bottom right" />
     </div>
 </template>
@@ -14,13 +14,13 @@
 import { Component, Vue } from "vue-property-decorator"
 
 import GithubCorner from "@/components/GithubCorner.vue"
-import AppFooter from "@/layouts/AppFooter.vue"
-import AppHeader from "@/layouts/AppHeader.vue"
+import { TheHeader } from "@/widgets/Header"
+import { TheFooter } from "@/widgets/Footer"
 
 @Component({
     components: {
-        AppFooter,
-        AppHeader,
+        'the-header': TheHeader,
+        'the-footer': TheFooter,
         GithubCorner,
     },
 })
