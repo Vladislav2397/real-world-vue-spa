@@ -24,9 +24,10 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 
+import { PopularTags } from "@/widgets/article"
+import { Banner } from "./Banner"
+
 import CommonFeed, { IFeedTab } from "@/components/CommonFeed.vue"
-import HomeBanner from "@/components/HomeBanner.vue"
-import HomeTags from "@/components/HomeTags.vue"
 import IPagination, {
     DEFAULT_ITEMS_PER_PAGE,
     DEFAULT_START_PAGE,
@@ -43,8 +44,8 @@ enum FeedType {
 
 @Component({
     components: {
-        HomeBanner,
-        HomeTags,
+        'home-banner': Banner,
+        'home-tags': PopularTags,
         CommonFeed,
     },
 })

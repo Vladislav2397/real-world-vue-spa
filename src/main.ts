@@ -3,7 +3,7 @@ import "./registerServiceWorker"
 import Vue from "vue"
 import Notifications from "vue-notification"
 
-import App from "./App.vue"
+import App from "./app/App.vue"
 import router, { RoutesNames } from "./router"
 import store from "./store"
 

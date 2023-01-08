@@ -46,9 +46,9 @@
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from "vue-property-decorator"
 
-import ArticlePreview from "@/components/ArticlePreview.vue"
-import CommonLoader from "@/components/CommonLoader.vue"
-import CommonPagination from "@/components/CommonPagination.vue"
+import { Loader, Pagination } from "@/shared/ui"
+import { ArticlePreview } from '@/entities/article'
+
 import { IArticle, IArticleList } from "@/services/realWorldApi/models"
 import Article from "@/store/modules/Article"
 
@@ -59,9 +59,9 @@ export interface IFeedTab {
 
 @Component({
     components: {
-        CommonLoader,
-        ArticlePreview,
-        CommonPagination,
+        'common-loader': Loader,
+        'common-pagination': Pagination,
+        'article-preview': ArticlePreview,
     },
 })
 export default class CommonFeed extends Vue {
