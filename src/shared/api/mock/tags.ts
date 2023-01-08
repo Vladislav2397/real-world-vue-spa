@@ -1,9 +1,11 @@
-const getList = async (): Promise<string[]> => {
+
+// [origin]/tags
+const getTags = async (): Promise<string[]> => {
   return ['some', 'tags']
 }
 
 const tagsMock = {
-    getList,
+    getTags,
 }
 
 export default tagsMock

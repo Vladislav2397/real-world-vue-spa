@@ -22,7 +22,8 @@
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.5.1",
     "vuex": "^3.6.2",
-    "vuex-module-decorators": "^2.0.0"
+    "vuex-module-decorators": "^2.0.0",
+    "vuex-simple": "^2.2.0"
   },
   "devDependencies": {
     "@types/dompurify": "^2.4.0",
