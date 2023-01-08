@@ -1,32 +1,28 @@
 <template>
-  <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
-  </div>
+    <div>
+        <github-corner />
+        <app-header />
+        <keep-alive>
+            <router-view />
+        </keep-alive>
+        <app-footer />
+        <notifications position="bottom right" />
+    </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator"
 
-nav {
-  padding: 30px;
+import GithubCorner from "@/components/GithubCorner.vue"
+import AppFooter from "@/layouts/AppFooter.vue"
+import AppHeader from "@/layouts/AppHeader.vue"
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>
+@Component({
+    components: {
+        AppFooter,
+        AppHeader,
+        GithubCorner,
+    },
+})
+export default class App extends Vue {}
+</script>
