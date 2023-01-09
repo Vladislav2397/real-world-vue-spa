@@ -12,7 +12,8 @@ import { Route } from "vue-router"
 import ArticleEditor from "@/components/ArticleEditor.vue"
 import CommonLoader from "@/components/CommonLoader.vue"
 import { IArticle } from "@/services/realWorldApi/models"
-import Article from "@/store/modules/Article"
+import { useModule } from "vuex-simple"
+// import Article from "@/store/modules/Article"
 
 Component.registerHooks(["beforeRouteEnter", "beforeRouteUpdate"])
 
@@ -36,6 +37,10 @@ export default class ArticleEdit extends Vue {
     isLoading = false
     article: IArticle | null = null
 
+    get Article() {
+        return useModule(this.$store, ['article']) as any
+    }
+
     async onRouteUpdate(
         to: Route,
         from: Route,
@@ -51,8 +56,8 @@ export default class ArticleEdit extends Vue {
                 return
             }
             if (toSlug !== fromSlug || !this.article) {
-                await Article.fetchSingle(toSlug)
-                this.article = Article.articlesCache[toSlug]
+                await this.Article.fetchSingle(toSlug)
+                this.article = this.Article.articlesCache[toSlug]
             }
         } catch (e) {
             this.$router.push({ name: this.$routesNames.home })

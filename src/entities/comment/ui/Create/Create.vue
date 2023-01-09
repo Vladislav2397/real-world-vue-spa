@@ -37,10 +37,11 @@ div(
 import { Component, Prop, Vue } from "vue-property-decorator"
 
 import CommonErrorsList from "@/components/CommonErrorsList.vue"
-import Article from "@/store/modules/Article"
-import User from "@/store/modules/User"
+// import Article from "@/store/modules/Article"
+// import User from "@/store/modules/User"
 import { isArrayOfStrings } from "@/utils/ArrayUtils"
 import { notifySuccess } from "@/utils/NotificationUtils"
+import { useModule } from "vuex-simple"
 
 @Component({ components: { CommonErrorsList } })
 export default class CommentCreate extends Vue {
@@ -50,12 +51,20 @@ export default class CommentCreate extends Vue {
     errors: string[] = []
     isLoading = false
 
+    get Article() {
+        return useModule(this.$store, ['article']) as any
+    }
+
+    get User() {
+        return useModule(this.$store, ['user']) as any
+    }
+
     get userImage(): string | null | undefined {
-        return User.currentUser?.image
+        return this.User.currentUser?.image
     }
 
     get isLoggedIn(): boolean {
-        return User.isLoggedIn
+        return this.User.isLoggedIn
     }
 
     async addComment(): Promise<void> {
@@ -63,7 +72,7 @@ export default class CommentCreate extends Vue {
 
         this.isLoading = true
         try {
-            await Article.addComment({
+            await this.Article.addComment({
                 slug: this.slug,
                 params: { body: this.body },
             })

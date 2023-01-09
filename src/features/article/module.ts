@@ -8,6 +8,7 @@ export class ArticleModule extends articleModel.ArticleModule {
 
         // work with data
 
+        // @ts-ignore
         this.updatePool({
             [slug]: {
                 slug,
@@ -19,6 +20,7 @@ export class ArticleModule extends articleModel.ArticleModule {
     update() {
         const slug = "some-1"
 
+        // @ts-ignore
         this.updatePool({
             [slug]: {
                 slug,

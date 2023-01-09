@@ -39,7 +39,8 @@ import { Component, Prop, Vue } from "vue-property-decorator"
 import ArticleFavoritesButton from "@/components/ArticleFavoritesButton.vue"
 import ArticleMeta from "@/components/ArticleMeta.vue"
 import { IArticle, IProfile } from "@/services/realWorldApi/models"
-import Profile from "@/store/modules/Profile"
+import { useModule } from "vuex-simple"
+// import Profile from "@/store/modules/Profile"
 
 const MAX_VISIBLE_TAGS = 5
 
@@ -53,6 +54,10 @@ export default class ArticlePreview extends Vue {
     @Prop({ required: true }) readonly article!: IArticle
 
     isLoading = false
+
+    get Profile() {
+        return useModule(this.$store, ['profile']) as any
+    }
 
     get linkTo() {
         return {
@@ -70,7 +75,7 @@ export default class ArticlePreview extends Vue {
     }
     get author(): IProfile {
         return (
-            Profile.profilesCache[this.article.author.username] ||
+            this.Profile.profilesCache[this.article.author.username] ||
             this.article.author
         )
     }

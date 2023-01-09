@@ -17,7 +17,8 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator"
 import { CommentCreate, CommentCard } from "@/entities/comment"
 import CommonLoader from "@/components/CommonLoader.vue"
 import { IComment } from "@/services/realWorldApi/models"
-import Article from "@/store/modules/Article"
+import { useModule } from "vuex-simple"
+// import Article from "@/store/modules/Article"
 
 @Component({
     components: {
@@ -32,12 +33,18 @@ export default class ArticleComments extends Vue {
     comments: IComment[] = []
     isLoading = false
 
+    get Article() {
+        return useModule(this.$store, ['article']) as any
+    }
+
     refreshComments(): void {
         const comments: IComment[] = []
-        Object.values(Article.commentsCache[this.slug] || [])?.forEach(
+        Object.values(this.Article.commentsCache[this.slug] || [])?.forEach(
             comment => {
-                if (Article.commentsCache[this.slug]?.[comment.id]) {
-                    comments.push(Article.commentsCache[this.slug][comment.id])
+                // @ts-ignore
+                if (this.Article.commentsCache[this.slug]?.[comment.id]) {
+                    // @ts-ignore
+                    comments.push(this.Article.commentsCache[this.slug][comment.id])
                 }
             }
         )
@@ -50,7 +57,7 @@ export default class ArticleComments extends Vue {
         this.isLoading = true
         try {
             if (slug) {
-                await Article.fetchComments(slug)
+                await this.Article.fetchComments(slug)
                 this.refreshComments()
             }
         } finally {

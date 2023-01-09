@@ -1,10 +1,12 @@
+import store from "@/app/providers/store"
 import Vue from "vue"
 import VueRouter, { Route, NavigationGuardNext } from "vue-router"
 
-import User from "@/store/modules/User"
+// import User from "@/store/modules/User"
 
 import { Routes } from "./routes"
 import RoutesNames from "./routesNames"
+import { useModule } from "vuex-simple"
 
 Vue.use(VueRouter)
 
@@ -19,6 +21,8 @@ const requiresAuthGuard = (
     from: Route,
     next: NavigationGuardNext
 ): boolean => {
+    const User = useModule(store, ["user"]) as any
+
     if (to.matched.some(record => record.meta.requiresAuth)) {
         const isLoggedIn = !!User.currentUser
         if (!isLoggedIn) {
@@ -39,6 +43,8 @@ const anonymousOnlyGuard = (
     from: Route,
     next: NavigationGuardNext
 ): boolean => {
+    const User = useModule(store, ["user"]) as any
+
     if (to.matched.some(record => record.meta.anonymousOnly)) {
         const isAnonymous = !User.currentUser
         if (!isAnonymous) {
@@ -54,6 +60,8 @@ const anonymousOnlyGuard = (
 }
 
 router.beforeEach(async (to, from, next) => {
+    const User = useModule(store, ["user"]) as any
+
     await User.completeAuth()
     if (requiresAuthGuard(to, from, next)) {
         return

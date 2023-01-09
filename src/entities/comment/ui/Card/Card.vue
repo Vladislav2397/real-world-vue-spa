@@ -25,9 +25,10 @@
 import { Component, Prop, Vue } from "vue-property-decorator"
 
 import { IComment } from "@/services/realWorldApi/models"
-import Article from "@/store/modules/Article"
-import User from "@/store/modules/User"
+// import Article from "@/store/modules/Article"
+// import User from "@/store/modules/User"
 import DateUtils from "@/utils/DateUtils"
+import { useModule } from "vuex-simple"
 
 @Component
 export default class CommentDisplay extends Vue {
@@ -36,11 +37,19 @@ export default class CommentDisplay extends Vue {
 
     isLoading = false
 
+    get Article() {
+        return useModule(this.$store, ['article']) as any
+    }
+
+    get User() {
+        return useModule(this.$store, ['user']) as any
+    }
+
     get linkTo() {
-return {
-                name: this.$routesNames.profileIndex,
-                params: { username: this.comment.author.username },
-            }
+        return {
+            name: this.$routesNames.profileIndex,
+            params: { username: this.comment.author.username },
+        }
     }
 
     get commentDate(): string {
@@ -48,13 +57,13 @@ return {
     }
 
     get isMyComment(): boolean {
-        return User.currentUser?.username === this.comment.author.username
+        return this.User.currentUser?.username === this.comment.author.username
     }
 
     async deleteComment(): Promise<void> {
         this.isLoading = true
         try {
-            await Article.deleteComment({
+            await this.Article.deleteComment({
                 slug: this.slug,
                 commentId: this.comment.id,
             })

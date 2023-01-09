@@ -34,8 +34,9 @@ nav.navbar.navbar-light
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
+import { useModule } from "vuex-simple"
 
-import User from "@/store/modules/User"
+// import User from "@/store/modules/User"
 
 interface IMenuItem {
     title: string
@@ -46,12 +47,16 @@ interface IMenuItem {
 
 @Component
 export default class TheHeader extends Vue {
-get linkTo() {
-    return {
-        name: this.$routesNames.profileIndex,
-        params: { username: this.userName },
+    get linkTo() {
+        return {
+            name: this.$routesNames.profileIndex,
+            params: { username: this.userName },
+        }
     }
-}
+
+    get User() {
+        return useModule(this.$store, ['user']) as any
+    }
 
     get menuItems(): IMenuItem[] {
 
@@ -88,15 +93,15 @@ get linkTo() {
     }
 
     get isLoggedIn(): boolean {
-        return User.isLoggedIn
+        return this.User.isLoggedIn
     }
 
     get userName(): string {
-        return User.currentUser?.username || ""
+        return this.User.currentUser?.username || ""
     }
 
     get userImage(): string | null | undefined {
-        return User.currentUser?.image
+        return this.User.currentUser?.image
     }
 }
 </script>

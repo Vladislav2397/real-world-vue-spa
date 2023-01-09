@@ -1,11 +1,5 @@
 import Vue from "vue"
-import {
-    Action,
-    getModule,
-    Module,
-    Mutation,
-    VuexModule,
-} from "vuex-module-decorators"
+import { Action, Mutation, Getter, State } from "vuex-simple"
 
 import IPagination from "@/services/common/IPagination"
 import {
@@ -31,43 +25,43 @@ import {
     ArticleUpdate,
 } from "@/services/realWorldApi/RealWorldApiArticle"
 
-import store from "@/app/providers/store"
-import Profile from "../modules/Profile"
-import modulesNames from "../modulesNames"
-
-@Module({ dynamic: true, namespaced: true, store, name: modulesNames.article })
-class Article extends VuexModule {
+export class Article {
+    @State()
     private _articlesCache: Record<string, IArticle> = {}
+
+    @State()
     private _commentsCache: Record<string, Record<number, IComment>> = {}
 
+    @Getter()
     get articlesCache(): Record<string, IArticle> {
         return this._articlesCache
     }
 
+    @Getter()
     get commentsCache(): Record<string, Record<number, IComment>> {
         return this._commentsCache
     }
 
-    @Mutation
+    @Mutation()
     addArticleToCache(article: IArticle): void {
         const cachedArticle = this._articlesCache[article.slug]
         if (!cachedArticle || article.updatedAt >= cachedArticle.updatedAt) {
             Vue.set(this._articlesCache, article.slug, article)
         }
-        Profile.addProfileToCache(article.author)
+        // Profile.addProfileToCache(article.author)
     }
 
-    @Mutation
+    @Mutation()
     clearArticlesCache(): void {
         this._articlesCache = {}
     }
 
-    @Mutation
+    @Mutation()
     removeArticleFromCache(slug: string): void {
         Vue.delete(this._articlesCache, slug)
     }
 
-    @Mutation
+    @Mutation()
     addCommentToCache(payload: { slug: string; comment: IComment }): void {
         if (!this._commentsCache[payload.slug]) {
             Vue.set(this._commentsCache, payload.slug, {})
@@ -77,20 +71,20 @@ class Article extends VuexModule {
             payload.comment.id,
             payload.comment
         )
-        Profile.addProfileToCache(payload.comment.author)
+        // Profile.addProfileToCache(payload.comment.author)
     }
 
-    @Mutation
+    @Mutation()
     clearCommentsCache(): void {
         this._commentsCache = {}
     }
 
-    @Mutation
+    @Mutation()
     removeCommentFromCache(payload: { slug: string; id: number }): void {
         Vue.delete(this._commentsCache[payload.slug], payload.id)
     }
 
-    @Action({ rawError: true })
+    @Action()
     addMultipleCommentsToCache(payload: {
         slug: string
         comments: IComment[]
@@ -100,18 +94,18 @@ class Article extends VuexModule {
         )
     }
 
-    @Action({ rawError: true })
+    @Action()
     addMultipleArticlesToCache(articles: IArticle[]): void {
         articles.forEach(article => this.addArticleToCache(article))
     }
 
-    @Action({ rawError: true })
+    @Action()
     async fetchSingle(slug: string): Promise<void> {
         const res = await ArticleGet(slug)
         this.addArticleToCache(res)
     }
 
-    @Action({ rawError: true })
+    @Action()
     async getFeed(
         params: IPagination = { limit: 20, offset: 0 }
     ): Promise<IArticleList> {
@@ -121,7 +115,7 @@ class Article extends VuexModule {
         return res
     }
 
-    @Action({ rawError: true })
+    @Action()
     async getList(params: IArticleGetListRequestParams): Promise<IArticleList> {
         const res = await ArticleGetList(params)
         this.clearArticlesCache()
@@ -129,14 +123,14 @@ class Article extends VuexModule {
         return res
     }
 
-    @Action({ rawError: true })
+    @Action()
     async create(params: IArticleCreateRequestParams): Promise<IArticle> {
         const res = await ArticleCreate(params)
         this.addArticleToCache(res)
         return res
     }
 
-    @Action({ rawError: true })
+    @Action()
     async update(payload: {
         slug: string
         params: IArticleUpdateRequestParams
@@ -146,31 +140,31 @@ class Article extends VuexModule {
         return res
     }
 
-    @Action({ rawError: true })
+    @Action()
     async delete(slug: string): Promise<void> {
         await ArticleDelete(slug)
         this.removeArticleFromCache(slug)
     }
 
-    @Action({ rawError: true })
+    @Action()
     async addToFavorites(slug: string): Promise<void> {
         const res = await ArticleAddToFavorites(slug)
         this.addArticleToCache(res)
     }
 
-    @Action({ rawError: true })
+    @Action()
     async removeFromFavorites(slug: string): Promise<void> {
         const res = await ArticleRemoveFromFavorites(slug)
         this.addArticleToCache(res)
     }
 
-    @Action({ rawError: true })
+    @Action()
     async fetchComments(slug: string): Promise<void> {
         const comments = await ArticleGetComments(slug)
         this.addMultipleCommentsToCache({ slug, comments })
     }
 
-    @Action({ rawError: true })
+    @Action()
     async addComment(payload: {
         slug: string
         params: IArticleAddCommentRequestParams
@@ -179,7 +173,7 @@ class Article extends VuexModule {
         this.addCommentToCache({ slug: payload.slug, comment })
     }
 
-    @Action({ rawError: true })
+    @Action()
     async deleteComment(payload: {
         slug: string
         commentId: number
@@ -192,4 +186,4 @@ class Article extends VuexModule {
     }
 }
 
-export default getModule(Article)
+// export default getModule(Article)

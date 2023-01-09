@@ -38,7 +38,8 @@ import ArticleComments from "@/components/ArticleComments.vue"
 import ArticleViewActions from "@/components/ArticleViewActions.vue"
 import CommonLoader from "@/components/CommonLoader.vue"
 import { IArticle } from "@/services/realWorldApi/models"
-import Article from "@/store/modules/Article"
+import { useModule } from "vuex-simple"
+// import Article from "@/store/modules/Article"
 
 Component.registerHooks(["beforeRouteEnter", "beforeRouteUpdate"])
 
@@ -64,8 +65,12 @@ export default class ArticleView extends Vue {
     slug = ""
     _article: IArticle | null = null
 
+    get Article() {
+        return useModule(this.$store, ['article']) as any
+    }
+
     get article(): IArticle {
-        return Article.articlesCache[this.slug] || this._article
+        return this.Article.articlesCache[this.slug] || this._article
     }
 
     get HTMLBody(): string {
@@ -89,7 +94,7 @@ export default class ArticleView extends Vue {
                 return
             }
             if (toSlug !== fromSlug) {
-                await Article.fetchSingle(toSlug)
+                await this.Article.fetchSingle(toSlug)
                 this.slug = toSlug
             }
         } catch (e) {
@@ -102,7 +107,7 @@ export default class ArticleView extends Vue {
     async onDeleteArticle(): Promise<void> {
         this.isLoading = true
         try {
-            await Article.delete(this.slug)
+            await this.Article.delete(this.slug)
             this.$router.push({ name: this.$routesNames.home })
         } finally {
             this.isLoading = false

@@ -65,8 +65,9 @@ import { Component, Vue, Watch } from "vue-property-decorator"
 import CommonErrorsList from "@/components/CommonErrorsList.vue"
 import CommonLoader from "@/components/CommonLoader.vue"
 import { ICurrentUser } from "@/store/models"
-import User from "@/store/modules/User"
+// import User from "@/store/modules/User"
 import { isArrayOfStrings } from "@/utils/ArrayUtils"
+import { useModule } from "vuex-simple"
 
 @Component({
     components: {
@@ -84,16 +85,20 @@ export default class ProfileSettings extends Vue {
     username = ""
     errors?: string[] = []
 
+    get User() {
+        return useModule(this.$store, ['user']) as any
+    }
+
     get hasErrors(): boolean {
         return !!this.errors?.length
     }
 
     get currentUser(): Partial<ICurrentUser> {
-        return User.currentUser || {}
+        return this.User.currentUser || {}
     }
 
     logout(): void {
-        User.logout()
+        this.User.logout()
         this.$router.push({ name: this.$routesNames.home })
     }
 
@@ -102,7 +107,7 @@ export default class ProfileSettings extends Vue {
 
         this.isLoading = true
         try {
-            await User.update({
+            await this.User.update({
                 email: this.email,
                 password: this.password,
                 bio: this.bio,

@@ -43,7 +43,8 @@ import { Loader, Pagination } from "@/shared/ui"
 import { ArticlePreview } from '@/entities/article'
 
 import { IArticle, IArticleList } from "@/services/realWorldApi/models"
-import Article from "@/store/modules/Article"
+import { useModule } from "vuex-simple"
+// import Article from "@/store/modules/Article"
 
 export interface IFeedTab {
     id: string
@@ -65,8 +66,12 @@ export default class List extends Vue {
     @Prop({ required: true }) itemsPerPage!: number
     @Prop({ required: true }) currentPage!: number
 
+    get Article() {
+        return useModule(this.$store, ['article']) as any
+    }
+
     get articlesCache(): Record<string, IArticle> {
-        return Article.articlesCache
+        return this.Article.articlesCache
     }
 
     get articles(): IArticle[] {

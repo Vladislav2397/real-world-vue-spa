@@ -5,16 +5,10 @@
                 <div class="col-md-6 offset-md-3 col-xs-12">
                     <h1 class="text-xs-center">Sign up</h1>
                     <p class="text-xs-center">
-                        <router-link
-                            v-if="isRegisterMode"
-                            :to="{ name: $routesNames.authLogin }"
-                        >
+                        <router-link v-if="isRegisterMode" :to="{ name: $routesNames.authLogin }">
                             Have an account?
                         </router-link>
-                        <router-link
-                            v-else
-                            :to="{ name: $routesNames.authRegister }"
-                        >
+                        <router-link v-else :to="{ name: $routesNames.authRegister }">
                             Need an account?
                         </router-link>
                     </p>
@@ -24,45 +18,21 @@
                     <form>
                         <fieldset :disabled="isLoading">
                             <fieldset v-if="isRegisterMode" class="form-group">
-                                <input
-                                    v-model="username"
-                                    class="form-control form-control-lg"
-                                    type="text"
-                                    placeholder="Your Name"
-                                    required="true"
-                                />
+                                <input v-model="username" class="form-control form-control-lg" type="text"
+                                    placeholder="Your Name" required="true" />
                             </fieldset>
                             <fieldset class="form-group">
-                                <input
-                                    v-model="email"
-                                    class="form-control form-control-lg"
-                                    type="text"
-                                    placeholder="Email"
-                                    required="true"
-                                />
+                                <input v-model="email" class="form-control form-control-lg" type="text"
+                                    placeholder="Email" required="true" />
                             </fieldset>
                             <fieldset class="form-group">
-                                <input
-                                    v-model="password"
-                                    class="form-control form-control-lg"
-                                    type="password"
-                                    placeholder="Password"
-                                    required="true"
-                                />
+                                <input v-model="password" class="form-control form-control-lg" type="password"
+                                    placeholder="Password" required="true" />
                             </fieldset>
                         </fieldset>
-                        <common-loader
-                            v-if="isLoading"
-                            :size="5"
-                            :margin="0"
-                            class="pull-xs-right"
-                        />
-                        <button
-                            v-else
-                            class="btn btn-lg btn-primary pull-xs-right"
-                            @click="authAction"
-                        >
-                            {{ isRegisterMode ? "Sign up" : "Sign in" }}
+                        <common-loader v-if="isLoading" :size="5" :margin="0" class="pull-xs-right" />
+                        <button v-else class="btn btn-lg btn-primary pull-xs-right" @click="authAction">
+                            {{ isRegisterMode? "Sign up": "Sign in" }}
                         </button>
                     </form>
                 </div>
@@ -76,8 +46,9 @@ import { Component, Prop, Vue } from "vue-property-decorator"
 
 import CommonErrorsList from "@/components/CommonErrorsList.vue"
 import CommonLoader from "@/components/CommonLoader.vue"
-import User from "@/store/modules/User"
+// import User from "@/store/modules/User"
 import { isArrayOfStrings } from "@/utils/ArrayUtils"
+import { useModule } from "vuex-simple"
 
 export enum AuthPageMode {
     Register = "Register",
@@ -101,6 +72,10 @@ export default class AuthPage extends Vue {
 
     errors?: string[] = []
 
+    get User() {
+        return useModule(this.$store, ['user']) as any
+    }
+
     mounted(): void {
         this.errors = []
     }
@@ -119,15 +94,15 @@ export default class AuthPage extends Vue {
         this.isLoading = true
         try {
             this.isRegisterMode
-                ? await User.register({
-                      email: this.email,
-                      password: this.password,
-                      username: this.username,
-                  })
-                : await User.login({
-                      email: this.email,
-                      password: this.password,
-                  })
+                ? await this.User.register({
+                    email: this.email,
+                    password: this.password,
+                    username: this.username,
+                })
+                : await this.User.login({
+                    email: this.email,
+                    password: this.password,
+                })
             this.$router.push({ name: this.$routesNames.home })
         } catch (e) {
             if (isArrayOfStrings(e)) {

@@ -52,9 +52,10 @@ import IPagination, {
     DEFAULT_START_PAGE,
 } from "@/services/common/IPagination"
 import { IArticleList, IProfile } from "@/services/realWorldApi/models"
-import Article from "@/store/modules/Article"
-import Profile from "@/store/modules/Profile"
-import User from "@/store/modules/User"
+// import Article from "@/store/modules/Article"
+// import Profile from "@/store/modules/Profile"
+// import User from "@/store/modules/User"
+import { useModule } from "vuex-simple"
 
 enum FeedType {
     Favorites = "favorites",
@@ -91,8 +92,20 @@ export default class ProfileIndex extends Vue {
     activeFeed: IArticleList = { articles: [], articlesCount: 0 }
     activeTag: string | null = null
 
+    get Article() {
+        return useModule(this.$store, ['article']) as any
+    }
+
+    get User() {
+        return useModule(this.$store, ['user']) as any
+    }
+
+    get Profile() {
+        return useModule(this.$store, ['profile']) as any
+    }
+
     get profile(): IProfile {
-        return Profile.profilesCache[this._profile?.username] || this._profile
+        return this.Profile.profilesCache[this._profile?.username] || this._profile
     }
 
     get tabs(): IFeedTab[] {
@@ -112,7 +125,7 @@ export default class ProfileIndex extends Vue {
     }
 
     get isMyProfile(): boolean {
-        return this.profile.username === User.currentUser?.username
+        return this.profile.username === this.User.currentUser?.username
     }
 
     async onRouteUpdate(
@@ -131,7 +144,7 @@ export default class ProfileIndex extends Vue {
                 return
             }
             if (toUserName !== fromUserName) {
-                this._profile = await Profile.get(toUserName)
+                this._profile = await this.Profile.get(toUserName)
             }
 
             const tabId = to?.params?.tabId
@@ -187,13 +200,13 @@ export default class ProfileIndex extends Vue {
 
             switch (this.activeTabId) {
                 case FeedType.Favorites:
-                    this.activeFeed = await Article.getList({
+                    this.activeFeed = await this.Article.getList({
                         favorited: this.profile.username,
                         ...pagination,
                     })
                     break
                 case FeedType.My:
-                    this.activeFeed = await Article.getList({
+                    this.activeFeed = await this.Article.getList({
                         author: this.profile.username,
                         ...pagination,
                     })

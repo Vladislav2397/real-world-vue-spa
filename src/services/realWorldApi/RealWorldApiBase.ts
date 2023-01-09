@@ -1,14 +1,18 @@
+import store from "@/app/providers/store"
+import { useModule } from "vuex-simple"
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 
 import router from "@/router"
 import routesNames from "@/router/routesNames"
 import HttpStatusCodes from "@/services/common/HttpStatusCodes"
-import User from "@/store/modules/User"
+// import User from "@/store/modules/User"
 import { notifyErrors, notifyWarn } from "@/utils/NotificationUtils"
 
 import { transformErrors } from "./Utils"
 
 const AuthInterceptor = (config: AxiosRequestConfig): AxiosRequestConfig => {
+    const User = useModule(store, ["user"]) as any
+
     const accessToken = User.authToken
     if (accessToken && config.headers)
         config.headers.Authorization = `Token ${accessToken}`
@@ -20,6 +24,8 @@ const OnResponseSuccess = (response: AxiosResponse<any>): AxiosResponse<any> =>
 
 const OnResponseFailure = (error: any): Promise<any> => {
     const httpStatus = error?.response?.status
+
+    const User = useModule(store, ["user"]) as any
 
     const errors = transformErrors(error?.response?.data?.errors)
     const isUnknownError = errors?.[0].startsWith("Unknown")
@@ -59,7 +65,7 @@ const OnResponseFailure = (error: any): Promise<any> => {
 }
 
 const instance: Readonly<AxiosInstance> = axios.create({
-    baseURL: 'https://api.realworld.io/api',
+    baseURL: "https://api.realworld.io/api",
     timeout: 5000,
 })
 

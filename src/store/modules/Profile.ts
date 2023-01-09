@@ -1,11 +1,10 @@
 import Vue from "vue"
 import {
     Action,
-    getModule,
-    Module,
+    // Module,
     Mutation,
-    VuexModule,
-} from "vuex-module-decorators"
+    // VuexModule,
+} from "vuex-simple"
 
 import { IProfile } from "@/services/realWorldApi/models"
 import {
@@ -14,37 +13,33 @@ import {
     ProfileUnfollow,
 } from "@/services/realWorldApi/RealWorldApiProfile"
 
-import store from "@/app/providers/store"
-import modulesNames from "../modulesNames"
-
-@Module({ dynamic: true, namespaced: true, store, name: modulesNames.profile })
-class Profile extends VuexModule {
+export class Profile {
     private _profilesCache: Record<string, IProfile> = {}
 
     get profilesCache(): Record<string, IProfile> {
         return this._profilesCache
     }
 
-    @Mutation
+    @Mutation()
     addProfileToCache(profile: IProfile): void {
         Vue.set(this._profilesCache, profile.username, profile)
     }
 
-    @Action({ rawError: true })
+    @Action()
     async get(username: string): Promise<IProfile> {
         const res = await ProfileGet(username)
         this.addProfileToCache(res)
         return res
     }
 
-    @Action({ rawError: true })
+    @Action()
     async follow(username: string): Promise<IProfile> {
         const res = await ProfileFollow(username)
         this.addProfileToCache(res)
         return res
     }
 
-    @Action({ rawError: true })
+    @Action()
     async unFollow(username: string): Promise<IProfile> {
         const res = await ProfileUnfollow(username)
         this.addProfileToCache(res)
@@ -52,4 +47,4 @@ class Profile extends VuexModule {
     }
 }
 
-export default getModule(Profile)
+// export default getModule(Profile)

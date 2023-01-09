@@ -1,33 +1,20 @@
 <template>
     <div v-if="!isLoggedIn">
-        <router-link :to="{ name: $routesNames.authLogin }"
-            >Sign in</router-link
-        >
+        <router-link :to="{ name: $routesNames.authLogin }">Sign in</router-link>
         or
-        <router-link :to="{ name: $routesNames.authRegister }"
-            >sign up</router-link
-        >
+        <router-link :to="{ name: $routesNames.authRegister }">sign up</router-link>
         to add comments on this article.
     </div>
     <div v-else>
         <common-errors-list :errors="errors" />
         <form class="card comment-form">
             <div class="card-block">
-                <textarea
-                    v-model="body"
-                    :disabled="isLoading"
-                    class="form-control"
-                    placeholder="Write a comment..."
-                    rows="3"
-                ></textarea>
+                <textarea v-model="body" :disabled="isLoading" class="form-control" placeholder="Write a comment..."
+                    rows="3"></textarea>
             </div>
             <div class="card-footer">
                 <img :src="userImage" class="comment-author-img" />
-                <button
-                    class="btn btn-sm btn-primary"
-                    :disabled="isLoading"
-                    @click="addComment"
-                >
+                <button class="btn btn-sm btn-primary" :disabled="isLoading" @click="addComment">
                     Post Comment
                 </button>
             </div>
@@ -39,10 +26,11 @@
 import { Component, Prop, Vue } from "vue-property-decorator"
 
 import CommonErrorsList from "@/components/CommonErrorsList.vue"
-import Article from "@/store/modules/Article"
-import User from "@/store/modules/User"
+// import Article from "@/store/modules/Article"
+// import User from "@/store/modules/User"
 import { isArrayOfStrings } from "@/utils/ArrayUtils"
 import { notifySuccess } from "@/utils/NotificationUtils"
+import { useModule } from "vuex-simple"
 
 @Component({ components: { CommonErrorsList } })
 export default class CommentAdd extends Vue {
@@ -52,12 +40,20 @@ export default class CommentAdd extends Vue {
     errors: string[] = []
     isLoading = false
 
+    get Article() {
+        return useModule(this.$store, ['article']) as any
+    }
+
+    get User() {
+        return useModule(this.$store, ['user']) as any
+    }
+
     get userImage(): string | null | undefined {
-        return User.currentUser?.image
+        return this.User.currentUser?.image
     }
 
     get isLoggedIn(): boolean {
-        return User.isLoggedIn
+        return this.User.isLoggedIn
     }
 
     async addComment(): Promise<void> {
@@ -65,7 +61,7 @@ export default class CommentAdd extends Vue {
 
         this.isLoading = true
         try {
-            await Article.addComment({
+            await this.Article.addComment({
                 slug: this.slug,
                 params: { body: this.body },
             })

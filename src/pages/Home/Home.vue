@@ -33,8 +33,9 @@ import IPagination, {
     DEFAULT_START_PAGE,
 } from "@/services/common/IPagination"
 import { IArticleList } from "@/services/realWorldApi/models"
-import Article from "@/store/modules/Article"
-import User from "@/store/modules/User"
+// import Article from "@/store/modules/Article"
+// import User from "@/store/modules/User"
+import { useModule } from "vuex-simple"
 
 enum FeedType {
     Global = "Global",
@@ -59,8 +60,16 @@ export default class Home extends Vue {
     activeFeed: IArticleList = { articles: [], articlesCount: 0 }
     activeTag: string | null = null
 
+    get Article() {
+        return useModule(this.$store, ['article']) as any
+    }
+
+    get User() {
+        return useModule(this.$store, ['user']) as any
+    }
+
     get isLoggedIn(): boolean {
-        return User.isLoggedIn
+        return this.User.isLoggedIn
     }
 
     get tabs(): IFeedTab[] {
@@ -131,16 +140,16 @@ export default class Home extends Vue {
 
             switch (this.activeTabId) {
                 case FeedType.Global:
-                    this.activeFeed = await Article.getList({ ...pagination })
+                    this.activeFeed = await this.Article.getList({ ...pagination })
                     break
                 case FeedType.Tag:
-                    this.activeFeed = await Article.getList({
+                    this.activeFeed = await this.Article.getList({
                         tag: this.activeTag as string,
                         ...pagination,
                     })
                     break
                 case FeedType.My:
-                    this.activeFeed = await Article.getFeed(pagination)
+                    this.activeFeed = await this.Article.getFeed(pagination)
                     break
                 default:
                     break
