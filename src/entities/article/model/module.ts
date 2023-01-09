@@ -1,17 +1,18 @@
+import Vue from "vue"
 import { Mutation, Getter, State } from "vuex-simple"
 
 export class ArticleModule {
     @State()
-    pool = {}
+    pool: Record<string, any> = {}
 
     @State()
-    poolByTags = {}
+    poolByTags: Record<string, string[]> = {}
 
     @State()
     active = null
 
     @Mutation()
-    updatePool(pool) {
+    updatePool(pool: any) {
         this.pool = {
             ...this.pool,
             ...pool,
@@ -31,6 +32,6 @@ export class ArticleModule {
     @Getter()
     get articlesByTag() {
         return (tag: string) =>
-            this.articlesByTag[tag].map(slug => this.pool[slug])
+            this.poolByTags[tag].map(slug => this.pool[slug])
     }
 }
