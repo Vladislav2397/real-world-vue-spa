@@ -1,19 +1,22 @@
 <template lang="pug">
 
-div(v-if="isLoading")
-    common-loader(:size="7")
+div(
+    v-if="isLoading"
+)
+    common-loader(
+        :size="7"
+    )
 .sidebar(
     v-else
 )
     p Popular Tags
 
     .tag-list
-        a(
+        a.tag-pill.tag-default(
             v-for="tag in tags"
             :key="tag"
-            class="tag-pill tag-default"
             href="#"
-            @click.prevent="selectTag(tag)"
+            @click.prevent="tagSelectedEmit(tag)"
         ) {{ tag }}
 
 </template>
@@ -21,23 +24,24 @@ div(v-if="isLoading")
 <script lang="ts">
 import { Component, Emit, Vue } from "vue-property-decorator"
 
-import CommonLoader from "@/components/CommonLoader.vue"
+import { Loader } from "@/shared/ui"
+
 import Tags from "@/store/modules/Tags"
 
 @Component({
     components: {
-        CommonLoader
+        'common-loader': Loader
     },
 })
-export default class HomeTags extends Vue {
+export default class PopularTags extends Vue {
     tags: string[] = []
     isLoading = false
 
-    async mounted(): Promise<void> {
+    async mounted() {
         await this.getTags()
     }
 
-    async getTags(): Promise<void> {
+    async getTags() {
         this.isLoading = true
 
         try {
@@ -48,7 +52,7 @@ export default class HomeTags extends Vue {
     }
 
     @Emit("tag-selected")
-    selectTag(tag: string): string {
+    tagSelectedEmit(tag: string): string {
         return tag
     }
 }

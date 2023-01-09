@@ -1,5 +1,5 @@
 import Vue from "vue"
-import VueRouter, { Location, Route, NavigationGuardNext } from "vue-router"
+import VueRouter, { Route, NavigationGuardNext } from "vue-router"
 
 import User from "@/store/modules/User"
 
@@ -64,5 +64,5 @@ router.beforeEach(async (to, from, next) => {
     next() // make sure to always call next()!
 })
 
-export { Location, RoutesNames }
+export { RoutesNames }
 export default router

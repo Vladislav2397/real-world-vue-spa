@@ -1,10 +1,10 @@
 <template lang="pug">
 
 .home-page
-    home-banner
+    banner-component
     .container.page: .row
         .col-md-9
-            common-feed(
+            article-list(
                 :tabs="tabs"
                 :active-tab-id="activeTabId"
                 :is-loading="isLoading"
@@ -15,7 +15,7 @@
                 @tab-changed="onTabChanged"
             )
         .col-md-3
-            home-tags(
+            popular-tags(
                 @tag-selected="onTagFeedActivated"
             )
 
@@ -44,9 +44,9 @@ enum FeedType {
 
 @Component({
     components: {
-        'home-banner': Banner,
-        'home-tags': PopularTags,
-        'common-feed': ArticleList,
+        'banner-component': Banner,
+        'popular-tags': PopularTags,
+        'article-list': ArticleList,
     },
 })
 export default class Home extends Vue {

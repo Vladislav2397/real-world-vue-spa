@@ -1,5 +1,3 @@
-import PopularTags from './HomeTags.vue'
+import PopularTags from "./PopularTags.vue"
 
-export {
-    PopularTags,
-}
+export { PopularTags }
