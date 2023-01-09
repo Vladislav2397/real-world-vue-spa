@@ -1,17 +1,17 @@
 <template lang="pug">
 
-div(
-    v-if="isLoading"
-)
-    common-loader(
-        :size="7"
-    )
-.sidebar(
-    v-else
-)
+.sidebar
     p Popular Tags
 
-    .tag-list
+    div(
+        v-if="isLoading"
+    )
+        loader-component(
+            :size="7"
+        )
+    .tag-list(
+        v-else
+    )
         a.tag-pill.tag-default(
             v-for="tag in tags"
             :key="tag"
@@ -25,17 +25,23 @@ div(
 import { Component, Emit, Vue } from "vue-property-decorator"
 
 import { Loader } from "@/shared/ui"
-
-import Tags from "@/store/modules/Tags"
+import { useModule } from "vuex-simple"
 
 @Component({
     components: {
-        'common-loader': Loader
+        'loader-component': Loader
     },
 })
 export default class PopularTags extends Vue {
     tags: string[] = []
     isLoading = false
+
+    get Tags() {
+        // TODO: Move interface module to shared slice
+        return useModule(this.$store, ['tag']) as {
+            getTags(): Promise<string[]>
+        }
+    }
 
     async mounted() {
         await this.getTags()
@@ -45,7 +51,7 @@ export default class PopularTags extends Vue {
         this.isLoading = true
 
         try {
-            this.tags = await Tags.get()
+            this.tags = await this.Tags.getTags()
         } finally {
             this.isLoading = false
         }

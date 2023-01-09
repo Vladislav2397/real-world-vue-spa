@@ -5,7 +5,7 @@ import Notifications from "vue-notification"
 
 import App from "./app/App.vue"
 import router, { RoutesNames } from "./router"
-import store from "./store"
+import store from "./app/providers/store"
 
 Vue.config.productionTip = false
 

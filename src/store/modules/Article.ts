@@ -31,7 +31,7 @@ import {
     ArticleUpdate,
 } from "@/services/realWorldApi/RealWorldApiArticle"
 
-import store from "../index"
+import store from "@/app/providers/store"
 import Profile from "../modules/Profile"
 import modulesNames from "../modulesNames"
 

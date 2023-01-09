@@ -20,7 +20,7 @@ import {
 } from "@/services/realWorldApi/RealWorldApiUser"
 import LocalStorageUtils from "@/utils/LocalStorageUtils"
 
-import store from "../index"
+import store from "@/app/providers/store"
 import { ICurrentUser, IUserState } from "../models"
 import modulesNames from "../modulesNames"
 import { TransformICurrentUserToIUser } from "../transformers/IUserTransformers"

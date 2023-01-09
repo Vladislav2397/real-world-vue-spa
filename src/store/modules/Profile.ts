@@ -14,7 +14,7 @@ import {
     ProfileUnfollow,
 } from "@/services/realWorldApi/RealWorldApiProfile"
 
-import store from "../index"
+import store from "@/app/providers/store"
 import modulesNames from "../modulesNames"
 
 @Module({ dynamic: true, namespaced: true, store, name: modulesNames.profile })
