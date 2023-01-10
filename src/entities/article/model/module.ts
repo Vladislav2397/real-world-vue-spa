@@ -1,4 +1,7 @@
 import Vue from "vue"
+
+import articleApi from "../api"
+
 import { Action, Getter, Mutation, State } from "vuex-simple"
 import {
     IArticle,
@@ -10,17 +13,8 @@ import {
     IComment,
 } from "@/services/realWorldApi/models"
 import {
-    ArticleAddComment,
-    ArticleAddToFavorites,
-    ArticleCreate,
-    ArticleDelete,
-    ArticleDeleteComment,
     ArticleGet,
-    ArticleGetComments,
     ArticleGetFeed,
-    ArticleGetList,
-    ArticleRemoveFromFavorites,
-    ArticleUpdate,
 } from "@/services/realWorldApi/RealWorldApiArticle"
 import IPagination from "@/services/common/IPagination"
 
@@ -127,7 +121,8 @@ export class ArticleModule {
 
     @Action()
     async fetchSingle(slug: string): Promise<void> {
-        const res = await ArticleGet(slug)
+        // const res = await ArticleGet(slug)
+        const res = await articleApi.getItem(slug)
         this.addArticleToCache(res)
     }
 
@@ -135,7 +130,8 @@ export class ArticleModule {
     async getFeed(
         params: IPagination = { limit: 20, offset: 0 }
     ): Promise<IArticleList> {
-        const res = await ArticleGetFeed(params)
+        // const res = await ArticleGetFeed(params)
+        const res = await articleApi.getFeed(params)
         this.clearArticlesCache()
         this.addMultipleArticlesToCache(res.articles)
         return res
@@ -143,7 +139,8 @@ export class ArticleModule {
 
     @Action()
     async getList(params: IArticleGetListRequestParams): Promise<IArticleList> {
-        const res = await ArticleGetList(params)
+        // const res = await ArticleGetList(params)
+        const res = await articleApi.getList(params)
         this.clearArticlesCache()
         this.addMultipleArticlesToCache(res.articles)
         return res
@@ -151,7 +148,8 @@ export class ArticleModule {
 
     @Action()
     async create(params: IArticleCreateRequestParams): Promise<IArticle> {
-        const res = await ArticleCreate(params)
+        // const res = await ArticleCreate(params)
+        const res = await articleApi.create(params)
         this.addArticleToCache(res)
         return res
     }
@@ -161,32 +159,37 @@ export class ArticleModule {
         slug: string
         params: IArticleUpdateRequestParams
     }): Promise<IArticle> {
-        const res = await ArticleUpdate(payload.slug, payload.params)
+        // const res = await ArticleUpdate(payload.slug, payload.params)
+        const res = await articleApi.update(payload.slug, payload.params)
         this.addArticleToCache(res)
         return res
     }
 
     @Action()
     async delete(slug: string): Promise<void> {
-        await ArticleDelete(slug)
+        // await ArticleDelete(slug)
+        await articleApi.remove(slug)
         this.removeArticleFromCache(slug)
     }
 
     @Action()
     async addToFavorites(slug: string): Promise<void> {
-        const res = await ArticleAddToFavorites(slug)
+        // const res = await ArticleAddToFavorites(slug)
+        const res = await articleApi.addToFavorites(slug)
         this.addArticleToCache(res)
     }
 
     @Action()
     async removeFromFavorites(slug: string): Promise<void> {
-        const res = await ArticleRemoveFromFavorites(slug)
+        // const res = await ArticleRemoveFromFavorites(slug)
+        const res = await articleApi.removeFromFavorites(slug)
         this.addArticleToCache(res)
     }
 
     @Action()
     async fetchComments(slug: string): Promise<void> {
-        const comments = await ArticleGetComments(slug)
+        // const comments = await ArticleGetComments(slug)
+        const comments = await articleApi.getComments(slug)
         this.addMultipleCommentsToCache({ slug, comments })
     }
 
@@ -195,7 +198,11 @@ export class ArticleModule {
         slug: string
         params: IArticleAddCommentRequestParams
     }): Promise<void> {
-        const comment = await ArticleAddComment(payload.slug, payload.params)
+        // const comment = await ArticleAddComment(payload.slug, payload.params)
+        const comment = await articleApi.addComment(
+            payload.slug,
+            payload.params
+        )
         this.addCommentToCache({ slug: payload.slug, comment })
     }
 
@@ -204,7 +211,8 @@ export class ArticleModule {
         slug: string
         commentId: number
     }): Promise<void> {
-        await ArticleDeleteComment(payload.slug, payload.commentId)
+        // await ArticleDeleteComment(payload.slug, payload.commentId)
+        await articleApi.deleteComment(payload.slug, payload.commentId)
         this.removeCommentFromCache({
             slug: payload.slug,
             id: payload.commentId,
