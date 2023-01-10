@@ -12,10 +12,6 @@ import {
     IArticleUpdateRequestParams,
     IComment,
 } from "@/services/realWorldApi/models"
-import {
-    ArticleGet,
-    ArticleGetFeed,
-} from "@/services/realWorldApi/RealWorldApiArticle"
 import IPagination from "@/services/common/IPagination"
 
 export class ArticleModule {

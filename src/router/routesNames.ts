@@ -1,5 +1,3 @@
-// import Vue from "vue";
-
 export interface IRoutesNames {
     home: string
 

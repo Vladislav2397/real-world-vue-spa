@@ -19,7 +19,7 @@ const AuthInterceptor = (config: AxiosRequestConfig): AxiosRequestConfig => {
     return config
 }
 
-const OnResponseSuccess = (response: AxiosResponse<any>): AxiosResponse<any> =>
+const OnResponseSuccess = <T>(response: AxiosResponse<T>): AxiosResponse<T> =>
     response
 
 const OnResponseFailure = (error: any): Promise<any> => {
