@@ -1,7 +1,6 @@
 import { User } from "@/store/modules/User"
 import { Profile } from "@/store/modules/Profile"
-import { Article } from "@/store/modules/Article"
-// import { articleModel } from "@/entities/article"
+import { ArticleModule } from "@/features/article"
 import { tagModel } from "@/entities/tag"
 import { Module } from "vuex-simple"
 
@@ -10,7 +9,7 @@ export class RootModule {
     tag = new tagModel.TagModule()
 
     @Module()
-    article = new Article()
+    article = new ArticleModule()
 
     @Module()
     profile = new Profile()

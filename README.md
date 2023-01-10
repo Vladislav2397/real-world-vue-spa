@@ -18,13 +18,11 @@ For more information on how to this works with other frontends/backends, head ov
 
 # How it works
 
->
-
-    - clean-architecture
-    - feature-sliced
-    - vue2
-    - vuex3
-    - vuex-simple
+- clean-architecture
+- feature-sliced
+- vue2
+- vuex3
+- vuex-simple
 
 # Getting started
 

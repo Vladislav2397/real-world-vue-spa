@@ -1,10 +1,5 @@
 import Vue from "vue"
-import {
-    Action,
-    // Module,
-    Mutation,
-    // VuexModule,
-} from "vuex-simple"
+import { Action, Mutation } from "vuex-simple"
 
 import { IProfile } from "@/services/realWorldApi/models"
 import {
