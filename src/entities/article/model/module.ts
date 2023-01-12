@@ -2,7 +2,12 @@ import Vue from "vue"
 
 import articleApi from "../api"
 
-import { commentApi, Comment, WrittenComment } from "@/entities/comment"
+import {
+    commentApi,
+    Comment,
+    WrittenComment,
+    CommentId,
+} from "@/entities/comment"
 
 import { Action, Getter, Mutation, State } from "vuex-simple"
 import {
@@ -13,8 +18,10 @@ import {
 import { ArticleSlug, Article, UpdateArticle, WrittenArticle } from "../types"
 
 export class ArticleModule {
-    // @State()
-    // pool: Record<string, any> = {}
+    @State() pool: Record<string, Article> = {}
+
+    @State() commentPool: Record<string, Record<number, Comment>> = {}
+
     // @State()
     // poolByTags: Record<string, string[]> = {}
     // @State()
@@ -40,62 +47,69 @@ export class ArticleModule {
     //         this.poolByTags[tag].map(slug => this.pool[slug])
     // }
 
-    @State()
-    private _articlesCache: Record<string, Article> = {}
-
-    @State()
-    private _commentsCache: Record<string, Record<number, Comment>> = {}
+    // @State()
+    // private _articlesCache: Record<string, Article> = {}
 
     @Getter()
     get articlesCache(): Record<string, Article> {
-        return this._articlesCache
+        return this.pool
     }
 
     @Getter()
     get commentsCache(): Record<string, Record<number, Comment>> {
-        return this._commentsCache
+        return this.commentPool
     }
 
     @Mutation()
     addArticleToCache(article: Article): void {
-        const cachedArticle = this._articlesCache[article.slug]
+        const cachedArticle = this.pool[article.slug]
+
         if (!cachedArticle || article.updatedAt >= cachedArticle.updatedAt) {
-            Vue.set(this._articlesCache, article.slug, article)
+            Vue.set(this.pool, article.slug, article)
         }
         // Profile.addProfileToCache(article.author)
     }
 
+    /** @deprecated */
     @Mutation()
     clearArticlesCache(): void {
-        this._articlesCache = {}
+        // this.pool = {}
+    }
+
+    /** @deprecated */
+    @Mutation()
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    removeArticleFromCache(_slug: ArticleSlug): void {
+        // Vue.delete(this.pool, slug)
     }
 
     @Mutation()
-    removeArticleFromCache(slug: string): void {
-        Vue.delete(this._articlesCache, slug)
-    }
-
-    @Mutation()
-    addCommentToCache(payload: { slug: string; comment: Comment }): void {
-        if (!this._commentsCache[payload.slug]) {
-            Vue.set(this._commentsCache, payload.slug, {})
+    addCommentToCache(payload: { slug: ArticleSlug; comment: Comment }): void {
+        if (!this.commentPool[payload.slug]) {
+            Vue.set(this.commentPool, payload.slug, {})
         }
         Vue.set(
-            this._commentsCache[payload.slug],
+            this.commentPool[payload.slug],
             payload.comment.id,
             payload.comment
         )
         // Profile.addProfileToCache(payload.comment.author)
     }
 
+    /** @deprecated */
     @Mutation()
     clearCommentsCache(): void {
-        this._commentsCache = {}
+        // this.commentPool = {}
     }
 
+    /** @deprecated */
     @Mutation()
-    removeCommentFromCache(payload: { slug: ArticleSlug; id: number }): void {
-        Vue.delete(this._commentsCache[payload.slug], payload.id)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    removeCommentFromCache(_payload: {
+        slug: ArticleSlug
+        id: CommentId
+    }): void {
+        // Vue.delete(this.commentPool[payload.slug], payload.id)
     }
 
     @Action()
@@ -126,7 +140,7 @@ export class ArticleModule {
     ): Promise<IArticleList> {
         // const res = await ArticleGetFeed(params)
         const res = await articleApi.getFeed(params)
-        this.clearArticlesCache()
+        // this.clearArticlesCache()
         this.addMultipleArticlesToCache(res.articles)
         return res
     }
@@ -135,7 +149,7 @@ export class ArticleModule {
     async getList(params: IArticleGetListRequestParams): Promise<IArticleList> {
         // const res = await ArticleGetList(params)
         const res = await articleApi.getList(params)
-        this.clearArticlesCache()
+        // this.clearArticlesCache()
         this.addMultipleArticlesToCache(res.articles)
         return res
     }
@@ -163,7 +177,7 @@ export class ArticleModule {
     async delete(slug: ArticleSlug): Promise<void> {
         // await ArticleDelete(slug)
         await articleApi.remove(slug)
-        this.removeArticleFromCache(slug)
+        // this.removeArticleFromCache(slug)
     }
 
     @Action()
@@ -207,9 +221,9 @@ export class ArticleModule {
     }): Promise<void> {
         // await ArticleDeleteComment(payload.slug, payload.commentId)
         await commentApi.deleteComment(payload.slug, payload.commentId)
-        this.removeCommentFromCache({
-            slug: payload.slug,
-            id: payload.commentId,
-        })
+        // this.removeCommentFromCache({
+        //     slug: payload.slug,
+        //     id: payload.commentId,
+        // })
     }
 }
