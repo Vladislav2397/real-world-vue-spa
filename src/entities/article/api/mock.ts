@@ -1,8 +1,8 @@
 import {
-    IArticleAddCommentRequestParams,
+    // IArticleAddCommentRequestParams,
     IArticleList,
     IArticleUpdateRequestParams,
-    IComment,
+    // IComment,
 } from "@/services/realWorldApi/models"
 import IArticle from "@/services/realWorldApi/models/IArticle"
 import ApiStoreMock from "@/shared/api/mock"
@@ -61,32 +61,32 @@ const update = async (
 const remove = async (_slug: string): Promise<IArticle> => {
     return returnArticle()
 }
-
-const getComment = () =>
-    ApiStoreMock.comments.pool["33550"] as unknown as IComment
-
-const addComment = async (
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _slug: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _params: IArticleAddCommentRequestParams
-): Promise<IComment> => {
-    return getComment()
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getComments = async (_slug: string): Promise<IComment[]> => {
-    return []
-}
-
-const deleteComment = async (
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _slug: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _commentId: number
-): Promise<void> => {
-    //
-}
+//
+// const getComment = () =>
+//     ApiStoreMock.comments.pool["33550"] as unknown as IComment
+//
+// const addComment = async (
+//     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//     _slug: string,
+//     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//     _params: IArticleAddCommentRequestParams
+// ): Promise<IComment> => {
+//     return getComment()
+// }
+//
+// // eslint-disable-next-line @typescript-eslint/no-unused-vars
+// const getComments = async (_slug: string): Promise<IComment[]> => {
+//     return []
+// }
+//
+// const deleteComment = async (
+//     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//     _slug: string,
+//     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//     _commentId: number
+// ): Promise<void> => {
+//     //
+// }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const addToFavorites = async (_slug: string): Promise<IArticle> => {
@@ -105,9 +105,9 @@ const articleApiMock = {
     create,
     update,
     remove,
-    getComments,
-    addComment,
-    deleteComment,
+    // getComments,
+    // addComment,
+    // deleteComment,
     addToFavorites,
     removeFromFavorites,
 }

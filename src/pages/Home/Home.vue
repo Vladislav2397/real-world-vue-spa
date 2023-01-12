@@ -49,7 +49,7 @@ enum FeedType {
     },
 })
 export default class Home extends Vue {
-    feedTypes: typeof FeedType = FeedType
+    // feedTypes: typeof FeedType = FeedType
     isLoading = false
     currentPage = DEFAULT_START_PAGE
     itemsPerPage = DEFAULT_ITEMS_PER_PAGE
