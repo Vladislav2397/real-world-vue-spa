@@ -2,7 +2,8 @@ import Vue from "vue"
 
 import articleApi from "../api"
 
-import { commentApi, Comment, WrittenComment } from "@/entities/comment"
+import { commentApi } from "@/entities/comment"
+import type { Comment, WrittenComment } from "@/entities/comment"
 
 import { Action, Getter, Mutation, State } from "vuex-simple"
 import {
