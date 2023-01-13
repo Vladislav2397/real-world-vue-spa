@@ -78,7 +78,7 @@ export class ArticleModule {
 
     @Action()
     addMultipleCommentsToCache(payload: {
-        slug: string
+        slug: ArticleSlug
         comments: Comment[]
     }): void {
         payload.comments.forEach(comment =>
@@ -98,10 +98,12 @@ export class ArticleModule {
     }
 
     @Action()
-    async getFeed(
-        params: Pagination = { limit: 20, offset: 0 }
-    ): Promise<IArticleList> {
-        const res = await articleApi.getFeed(params)
+    async getFeed(params: Pagination): Promise<IArticleList> {
+        const res = await articleApi.getFeed({
+            limit: 20,
+            offset: 0,
+            ...params,
+        })
         this.addMultipleArticlesToCache(res.articles)
         return res
     }
@@ -116,16 +118,21 @@ export class ArticleModule {
     @Action()
     async create(params: WrittenArticle): Promise<Article> {
         const res = await articleApi.create(params)
+
         this.addArticleToCache(res)
+
         return res
     }
 
     @Action()
-    async update(payload: {
+    async update({
+        slug,
+        params,
+    }: {
         slug: ArticleSlug
         params: UpdateArticle
     }): Promise<Article> {
-        const res = await articleApi.update(payload.slug, payload.params)
+        const res = await articleApi.update(slug, params)
         this.addArticleToCache(res)
         return res
     }

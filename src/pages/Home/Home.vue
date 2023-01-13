@@ -34,6 +34,7 @@ import IPagination, {
 } from "@/services/common/IPagination"
 import { IArticleList } from "@/services/realWorldApi/models"
 import { useModule } from "vuex-simple"
+import type { ArticleModule } from "@/features/article"
 
 enum FeedType {
     Global = "Global",
@@ -59,7 +60,7 @@ export default class Home extends Vue {
     activeTag: string | null = null
 
     get Article() {
-        return useModule(this.$store, ["article"]) as any
+        return useModule(this.$store, ["article"]) as ArticleModule
     }
 
     get User() {

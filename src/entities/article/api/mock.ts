@@ -1,21 +1,41 @@
 import {
-    // IArticleAddCommentRequestParams,
+    IArticleGetListRequestParams,
     IArticleList,
     IArticleUpdateRequestParams,
-    // IComment,
 } from "@/services/realWorldApi/models"
 import IArticle from "@/services/realWorldApi/models/IArticle"
 import ApiStoreMock from "@/shared/api/mock"
+import { ArticleSlug } from "@/entities/article"
 
-const getArticleBySlug = (slug: string) => {
+const getArticleBySlug = (slug: ArticleSlug) => {
     return ApiStoreMock.articles.pool[slug] as unknown as IArticle
 }
 
-const getList = async (..._args: any[]): Promise<IArticleList> => {
+const getList = async (
+    params: IArticleGetListRequestParams
+): Promise<IArticleList> => {
+    let articles = Object.values(
+        ApiStoreMock.articles.pool
+    ) as unknown as IArticleList["articles"]
+
+    if (params.tag) {
+        const { tag } = params
+        articles = articles.filter(article => article.tagList.includes(tag))
+    }
+
+    if (params.author) {
+        const { author } = params
+        articles = articles.filter(
+            article => article.author.username === author
+        )
+    }
+
+    if (params.favorited) {
+        articles = articles.filter(article => article.favorited)
+    }
+
     return {
-        articles: Object.values(
-            ApiStoreMock.articles.pool
-        ) as unknown as IArticleList["articles"],
+        articles,
         articlesCount: ApiStoreMock.articles.articlesCount,
     }
 }
@@ -36,7 +56,7 @@ const getFeed = async (..._args: any[]): Promise<IArticleList> => {
     }
 }
 
-const getItem = async (slug: string): Promise<IArticle> => {
+const getItem = async (slug: ArticleSlug): Promise<IArticle> => {
     return getArticleBySlug(slug)
 }
 
@@ -50,7 +70,7 @@ const create = async (_params: unknown): Promise<IArticle> => {
 
 const update = async (
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _slug: string,
+    _slug: ArticleSlug,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _params: IArticleUpdateRequestParams
 ): Promise<IArticle> => {
@@ -58,43 +78,19 @@ const update = async (
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const remove = async (_slug: string): Promise<IArticle> => {
-    return returnArticle()
-}
-//
-// const getComment = () =>
-//     ApiStoreMock.comments.pool["33550"] as unknown as IComment
-//
-// const addComment = async (
-//     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//     _slug: string,
-//     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//     _params: IArticleAddCommentRequestParams
-// ): Promise<IComment> => {
-//     return getComment()
-// }
-//
-// // eslint-disable-next-line @typescript-eslint/no-unused-vars
-// const getComments = async (_slug: string): Promise<IComment[]> => {
-//     return []
-// }
-//
-// const deleteComment = async (
-//     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//     _slug: string,
-//     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//     _commentId: number
-// ): Promise<void> => {
-//     //
-// }
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const addToFavorites = async (_slug: string): Promise<IArticle> => {
+const remove = async (_slug: ArticleSlug): Promise<IArticle> => {
     return returnArticle()
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const removeFromFavorites = async (_slug: string): Promise<IArticle> => {
+export const addToFavorites = async (_slug: ArticleSlug): Promise<IArticle> => {
+    return returnArticle()
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const removeFromFavorites = async (
+    _slug: ArticleSlug
+): Promise<IArticle> => {
     return returnArticle()
 }
 
@@ -105,9 +101,6 @@ const articleApiMock = {
     create,
     update,
     remove,
-    // getComments,
-    // addComment,
-    // deleteComment,
     addToFavorites,
     removeFromFavorites,
 }

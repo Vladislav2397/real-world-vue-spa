@@ -3,30 +3,32 @@ import { Comment, CommentId, WrittenComment } from "../types"
 
 import type { ArticleSlug } from "@/entities/article"
 
-const getComment = () =>
-    ApiStoreMock.comments.pool["33550"] as unknown as Comment
-
-const addComment = async (
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _slug: ArticleSlug,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _params: WrittenComment
-): Promise<Comment> => {
-    return getComment()
+const getComment = (comment?: Partial<Comment>) => {
+    return {
+        ...ApiStoreMock.comments.pool["33550"],
+        ...comment,
+    } as unknown as Comment
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getComments = async (_slug: ArticleSlug): Promise<Comment[]> => {
-    return []
+const addComment = async (
+    slug: ArticleSlug,
+    params: WrittenComment
+): Promise<Comment> => {
+    console.log("article added slug: %s, params: %s", slug, params)
+    return getComment(params)
+}
+
+const getComments = async (slug: ArticleSlug): Promise<Comment[]> => {
+    return Object.values(ApiStoreMock.comments.pool).filter(
+        comment => comment.article === slug
+    ) as unknown as Comment[]
 }
 
 const deleteComment = async (
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _slug: ArticleSlug,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _commentId: CommentId
+    slug: ArticleSlug,
+    commentId: CommentId
 ): Promise<void> => {
-    //
+    console.log("article deleted slug: %s, commentId: %s", slug, commentId)
 }
 
 const commentApiMock = {
