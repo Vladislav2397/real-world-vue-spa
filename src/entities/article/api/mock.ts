@@ -3,12 +3,11 @@ import {
     IArticleList,
     IArticleUpdateRequestParams,
 } from "@/services/realWorldApi/models"
-import IArticle from "@/services/realWorldApi/models/IArticle"
 import ApiStoreMock from "@/shared/api/mock"
-import { ArticleSlug } from "@/entities/article"
+import { Article, ArticleSlug, WrittenArticle } from "@/entities/article"
 
 const getArticleBySlug = (slug: ArticleSlug) => {
-    return ApiStoreMock.articles.pool[slug] as unknown as IArticle
+    return ApiStoreMock.articles.pool[slug] as unknown as Article
 }
 
 const getList = async (
@@ -40,8 +39,10 @@ const getList = async (
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getFeed = async (..._args: any[]): Promise<IArticleList> => {
+const getFeed = async (
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _pagination: Pagination
+): Promise<IArticleList> => {
     const articles = Object.values(
         ApiStoreMock.articles.pool
     ) as unknown as IArticleList["articles"]
@@ -56,42 +57,59 @@ const getFeed = async (..._args: any[]): Promise<IArticleList> => {
     }
 }
 
-const getItem = async (slug: ArticleSlug): Promise<IArticle> => {
+const getItem = async (slug: ArticleSlug): Promise<Article> => {
     return getArticleBySlug(slug)
 }
 
-const returnArticle = () =>
-    ApiStoreMock.articles.pool["new-article-128390"] as unknown as IArticle
+const returnArticle = (article?: Partial<Article>) => {
+    return {
+        ...(ApiStoreMock.articles.pool[
+            "new-article-128390"
+        ] as unknown as Article),
+        ...article,
+    }
+}
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const create = async (_params: unknown): Promise<IArticle> => {
-    return returnArticle()
+const create = async (params: WrittenArticle): Promise<Article> => {
+    return returnArticle(params)
 }
 
 const update = async (
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _slug: ArticleSlug,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _params: IArticleUpdateRequestParams
-): Promise<IArticle> => {
-    return returnArticle()
+    slug: ArticleSlug,
+    params: IArticleUpdateRequestParams
+): Promise<Article> => {
+    return {
+        ...getArticleBySlug(slug),
+        ...params,
+    }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const remove = async (_slug: ArticleSlug): Promise<IArticle> => {
-    return returnArticle()
+const remove = async (slug: ArticleSlug): Promise<Article> => {
+    return getArticleBySlug(slug)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const addToFavorites = async (_slug: ArticleSlug): Promise<IArticle> => {
-    return returnArticle()
+export const addToFavorites = async (slug: ArticleSlug): Promise<Article> => {
+    console.log("add to favorites", slug)
+    const article = getArticleBySlug(slug)
+
+    return {
+        ...article,
+        favorited: true,
+        favoritesCount: article.favoritesCount + 1,
+    }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const removeFromFavorites = async (
-    _slug: ArticleSlug
-): Promise<IArticle> => {
-    return returnArticle()
+    slug: ArticleSlug
+): Promise<Article> => {
+    console.log("remove from favorites", slug)
+    const article = getArticleBySlug(slug)
+
+    return {
+        ...article,
+        favorited: false,
+        favoritesCount: article.favoritesCount,
+    }
 }
 
 const articleApiMock = {

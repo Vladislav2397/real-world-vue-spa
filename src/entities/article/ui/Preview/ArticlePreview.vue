@@ -34,29 +34,32 @@
 </template>
 
 <script lang="ts">
+/* FIXME: Move to widget (incorrect dependency import from features) */
 import { Component, Prop, Vue } from "vue-property-decorator"
-
-import ArticleFavoritesButton from "@/components/ArticleFavoritesButton.vue"
-import ArticleMeta from "@/components/ArticleMeta.vue"
-import { IArticle, IProfile } from "@/services/realWorldApi/models"
 import { useModule } from "vuex-simple"
-// import Profile from "@/store/modules/Profile"
+
+import { ArticleFavoritesButton } from "@/features/article"
+
+import { Article } from "../../types"
+import { Meta } from "../Meta"
+
+import type { User } from "@/entities/user"
 
 const MAX_VISIBLE_TAGS = 5
 
 @Component({
     components: {
-        ArticleMeta,
-        ArticleFavoritesButton,
+        "article-meta": Meta,
+        "article-favorites-button": ArticleFavoritesButton,
     },
 })
 export default class ArticlePreview extends Vue {
-    @Prop({ required: true }) readonly article!: IArticle
+    @Prop({ required: true }) readonly article!: Article
 
     isLoading = false
 
     get Profile() {
-        return useModule(this.$store, ['profile']) as any
+        return useModule(this.$store, ["profile"]) as any
     }
 
     get linkTo() {
@@ -73,7 +76,7 @@ export default class ArticlePreview extends Vue {
     get nonVisibleTagsNumber(): number {
         return this.article.tagList.length - MAX_VISIBLE_TAGS
     }
-    get author(): IProfile {
+    get author(): User {
         return (
             this.Profile.profilesCache[this.article.author.username] ||
             this.article.author
