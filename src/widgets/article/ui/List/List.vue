@@ -21,9 +21,17 @@ div
         :key="article.slug"
         :article="article"
     )
+        template(
+            #actions
+        )
+            toggle-favorites-button.pull-xs-right(
+                :favorited="article.favorited"
+                :favorites-count="article.favoritesCount"
+                :slug="article.slug"
+            )
 
     .article-preview(
-        v-if="feed.articlesCount === 0 && !isLoading"
+        v-if="isArticlesEmpty"
     ) No articles are here... yet.
 
     common-pagination(
@@ -38,13 +46,13 @@ div
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from "vue-property-decorator"
+import { useModule } from "vuex-simple"
 
 import { Loader, Pagination } from "@/shared/ui"
-import { ArticlePreview } from '@/entities/article'
+import { ArticlePreview, Article } from "@/entities/article"
+import { ArticleFavoritesButton } from "@/features/article"
 
-import { IArticle, IArticleList } from "@/services/realWorldApi/models"
-import { useModule } from "vuex-simple"
-// import Article from "@/store/modules/Article"
+import { IArticleList } from "@/services/realWorldApi/models"
 
 export interface IFeedTab {
     id: string
@@ -53,31 +61,36 @@ export interface IFeedTab {
 
 @Component({
     components: {
-        'common-loader': Loader,
-        'common-pagination': Pagination,
-        'article-preview': ArticlePreview,
+        "common-loader": Loader,
+        "common-pagination": Pagination,
+        "article-preview": ArticlePreview,
+        "toggle-favorites-button": ArticleFavoritesButton,
     },
 })
 export default class List extends Vue {
     @Prop({ required: true }) tabs!: IFeedTab[]
     @Prop({ default: "" }) activeTabId!: string
     @Prop({ default: false }) isLoading!: boolean
-    @Prop({ required: true }) feed!: IArticleList
+    @Prop({ required: true }) feed!: IArticleList & { articles: Article[] }
     @Prop({ required: true }) itemsPerPage!: number
     @Prop({ required: true }) currentPage!: number
 
     get Article() {
-        return useModule(this.$store, ['article']) as any
+        return useModule(this.$store, ["article"]) as any
     }
 
-    get articlesCache(): Record<string, IArticle> {
+    get articlesCache(): Record<string, Article> {
         return this.Article.articlesCache
     }
 
-    get articles(): IArticle[] {
+    get articles(): Article[] {
         return this.feed.articles.map(
             article => this.articlesCache[article.slug] || article
         )
+    }
+
+    get isArticlesEmpty() {
+        return this.feed.articlesCount === 0 && !this.isLoading
     }
 
     @Emit("tab-changed")

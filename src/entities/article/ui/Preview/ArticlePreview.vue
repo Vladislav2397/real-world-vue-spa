@@ -6,11 +6,8 @@
         :created-at="article.createdAt"
         :author-image="author.image"
     )
-        article-favorites-button(
-            class="pull-xs-right"
-            :favorited="article.favorited"
-            :favorites-count="article.favoritesCount"
-            :slug="article.slug"
+        slot(
+            name="actions"
         )
     router-link(
         :to="linkTo"
@@ -38,8 +35,6 @@
 import { Component, Prop, Vue } from "vue-property-decorator"
 import { useModule } from "vuex-simple"
 
-import { ArticleFavoritesButton } from "@/features/article"
-
 import { Article } from "../../types"
 import { Meta } from "../Meta"
 
@@ -50,7 +45,6 @@ const MAX_VISIBLE_TAGS = 5
 @Component({
     components: {
         "article-meta": Meta,
-        "article-favorites-button": ArticleFavoritesButton,
     },
 })
 export default class ArticlePreview extends Vue {

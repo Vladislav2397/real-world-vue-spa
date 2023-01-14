@@ -1,15 +1,13 @@
 <template lang="pug">
 
-button(:class="classes" :disabled="isLoading" @click="toggleFavorites")
+button(
+    :class="classes"
+    :disabled="isLoading"
+    @click="toggleFavorites"
+)
     i.ion-heart
     | &nbsp;
-    template(
-        v-if="isWithDescription"
-    ) {{ favorited ? "Unfavorite Article" : "Favorite Article" }}
-        span.counter ({{ favoritesCount }})
-    template(
-        v-else
-    ) {{ favoritesCount }}
+    | {{ isWithDescription ? favoritesDescription : favoritesCount }}
 
 </template>
 
@@ -17,17 +15,25 @@ button(:class="classes" :disabled="isLoading" @click="toggleFavorites")
 import { Component, Prop, Vue } from "vue-property-decorator"
 import { useModule } from "vuex-simple"
 
+import { ArticleModule } from "../module"
+
 @Component
 export default class ArticleFavoritesButton extends Vue {
     @Prop({ required: true }) favoritesCount!: number
     @Prop({ required: true }) favorited!: boolean
     @Prop({ required: true }) slug!: string
-    @Prop({ default: false }) isWithDescription!: boolean
+    @Prop({ type: Boolean, default: false }) isWithDescription!: boolean
 
     isLoading = false
 
     get Article() {
-        return useModule(this.$store, ["article"]) as any
+        return useModule(this.$store, ["article"]) as ArticleModule
+    }
+
+    get favoritesDescription() {
+        const text = this.favorited ? "Unfavorite Article" : "Favorite Article"
+
+        return `${text} (${this.favoritesCount})`
     }
 
     get classes() {
