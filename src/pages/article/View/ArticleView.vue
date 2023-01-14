@@ -30,24 +30,24 @@ div(v-else class="article-page")
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { Route } from "vue-router"
+import { useModule } from "vuex-simple"
 
 import DOMPurify from "dompurify"
 import { marked } from "marked"
 
-import ArticleComments from "@/components/ArticleComments.vue"
+import { Loader } from "@/shared/ui"
+import { CommentList } from "@/entities/comment"
+
 import ArticleViewActions from "@/components/ArticleViewActions.vue"
-import CommonLoader from "@/components/CommonLoader.vue"
 import { IArticle } from "@/services/realWorldApi/models"
-import { useModule } from "vuex-simple"
-// import Article from "@/store/modules/Article"
 
 Component.registerHooks(["beforeRouteEnter", "beforeRouteUpdate"])
 
 @Component({
     components: {
         ArticleViewActions,
-        CommonLoader,
-        ArticleComments,
+        "common-loader": Loader,
+        "article-comments": CommentList,
     },
     beforeRouteEnter(to, from, next) {
         next(vm => {
@@ -66,7 +66,7 @@ export default class ArticleView extends Vue {
     _article: IArticle | null = null
 
     get Article() {
-        return useModule(this.$store, ['article']) as any
+        return useModule(this.$store, ["article"]) as any
     }
 
     get article(): IArticle {
