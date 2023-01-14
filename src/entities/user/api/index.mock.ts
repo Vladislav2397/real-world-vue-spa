@@ -18,6 +18,7 @@ const getViewer = (userData?: Partial<Viewer>): Viewer => {
         bio: user.bio,
         image: user.image,
         email: user.email,
+        ...userData,
         token,
     }
 }

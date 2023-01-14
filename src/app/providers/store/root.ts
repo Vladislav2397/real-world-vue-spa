@@ -1,6 +1,6 @@
 import { Module } from "vuex-simple"
 
-import { User } from "@/store/modules/User"
+import { userModel } from "@/entities/user"
 import { Profile } from "@/store/modules/Profile"
 
 import { tagModel } from "@/entities/tag"
@@ -22,5 +22,5 @@ export class RootModule {
     profile = new Profile()
 
     @Module()
-    user = new User()
+    user = new userModel.UserModule()
 }

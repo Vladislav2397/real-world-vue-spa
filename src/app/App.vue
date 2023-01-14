@@ -15,15 +15,16 @@ div
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 
-import GithubCorner from "@/components/GithubCorner.vue"
+import { GithubCorner } from "@/shared/ui"
+
 import { TheHeader } from "@/widgets/Header"
 import { TheFooter } from "@/widgets/Footer"
 
 @Component({
     components: {
-        'the-header': TheHeader,
-        'the-footer': TheFooter,
-        GithubCorner,
+        "the-header": TheHeader,
+        "the-footer": TheFooter,
+        "github-corner": GithubCorner,
     },
 })
 export default class App extends Vue {}

@@ -1,8 +1,6 @@
-import store from "@/app/providers/store"
 import Vue from "vue"
+import store from "@/app/providers/store"
 import VueRouter, { Route, NavigationGuardNext } from "vue-router"
-
-// import User from "@/store/modules/User"
 
 import { Routes } from "./routes"
 import RoutesNames from "./routesNames"
