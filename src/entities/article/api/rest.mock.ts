@@ -1,7 +1,9 @@
 import { IArticle } from "@/services/realWorldApi/models"
+
 import ApiStoreMock from "@/shared/api/mock"
 import utils from "@/shared/lib/utils"
-import { ArticleApi } from "@/entities/article/api/index.types"
+
+import { ArticleApi } from "./rest.types"
 
 const getArticleBySlug = (slug: ArticleSlug) => {
     return ApiStoreMock.articles.pool[slug] as unknown as Article
