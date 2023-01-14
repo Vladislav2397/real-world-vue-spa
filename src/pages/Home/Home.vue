@@ -23,18 +23,20 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
+import { useModule } from "vuex-simple"
+
+import type { ArticleModule } from "@/features/article"
 
 import { PopularTags, ArticleList } from "@/widgets/article"
+
 import { Banner } from "./Banner"
 
-import { IFeedTab } from "@/components/CommonFeed.vue"
-import IPagination, {
+import {
     DEFAULT_ITEMS_PER_PAGE,
     DEFAULT_START_PAGE,
 } from "@/services/common/IPagination"
+
 import { IArticleList } from "@/services/realWorldApi/models"
-import { useModule } from "vuex-simple"
-import type { ArticleModule } from "@/features/article"
 
 enum FeedType {
     Global = "Global",
@@ -71,8 +73,8 @@ export default class Home extends Vue {
         return this.User.isLoggedIn
     }
 
-    get tabs(): IFeedTab[] {
-        const res: IFeedTab[] = []
+    get tabs(): FeedTab[] {
+        const res: FeedTab[] = []
 
         if (this.isLoggedIn) {
             res.push({
@@ -92,6 +94,7 @@ export default class Home extends Vue {
                 title: `#${this.activeTag}`,
             })
         }
+
         return res
     }
 
@@ -132,7 +135,7 @@ export default class Home extends Vue {
     async fetchFeed(): Promise<void> {
         this.isLoading = true
         try {
-            const pagination: IPagination = {
+            const pagination: Pagination = {
                 limit: this.itemsPerPage,
                 offset: (this.currentPage - 1) * this.itemsPerPage,
             }

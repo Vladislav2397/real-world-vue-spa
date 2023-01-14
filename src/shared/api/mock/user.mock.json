@@ -1,0 +1,67 @@
+{
+    "pool": {
+        "vladislav": {
+            "email": "valdiszz53@gmail.com",
+            "username": "vladislav",
+            "bio": null,
+            "image": "https://api.realworld.io/images/smiley-cyrus.jpeg",
+            "following": ["Anah Benešová", "Katarzyna Jia"],
+            "favorites": ["1", "2", "3", "4", "5"]
+        },
+        "Anah Benešová": {
+            "email": "anah-benesova1993@gmail.com",
+            "username": "Anah Benešová",
+            "bio": null,
+            "image": "https://api.realworld.io/images/demo-avatar.png",
+            "following": ["Magda Parry"],
+            "favorites": ["6", "7", "8", "9", "10"]
+        },
+        "Einar Abdi": {
+            "email": "einarabdi@linkedin.com",
+            "username": "Einar Abdi",
+            "bio": null,
+            "image": "https://api.realworld.io/images/demo-avatar.png",
+            "following": ["Katarzyna Jia"],
+            "favorites": ["11", "12", "13", "14", "15"]
+        },
+        "Magda Parry": {
+            "email": "magparry@mail.ru",
+            "username": "Magda Parry",
+            "bio": null,
+            "image": "https://api.realworld.io/images/demo-avatar.png",
+            "following": [],
+            "favorites": ["16", "17", "18", "19", "20"]
+        },
+        "Katarzyna Jia": {
+            "username": "Katarzyna Jia",
+            "bio": null,
+            "image": "https://api.realworld.io/images/demo-avatar.png",
+            "email": "katarzyna@yandex.com",
+            "following": [],
+            "favorites": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20"
+            ]
+        }
+    },
+    "currentUser": "vladislav",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbGRpc3p6NTNAZ21haWwuY29tIiwidXNlcm5hbWUiOiJ2bGFkaXNsYXYiLCJpYXQiOjE2NzM2ODM1OTcsImV4cCI6MTY3ODg2NzU5N30.OCTfwbc2LXTcSecNwf6hId4QkkAJ_I2yssZhhyhdwIc"
+}

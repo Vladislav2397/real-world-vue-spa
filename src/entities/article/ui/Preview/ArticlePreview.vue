@@ -31,7 +31,6 @@
 </template>
 
 <script lang="ts">
-/* FIXME: Move to widget (incorrect dependency import from features) */
 import { Component, Prop, Vue } from "vue-property-decorator"
 import { useModule } from "vuex-simple"
 

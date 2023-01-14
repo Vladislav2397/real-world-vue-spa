@@ -1,4 +1,4 @@
-import tagApiMock from "./mock"
+import tagApiMock from "./index.mock"
 
 const tagApi = {
     ...tagApiMock,

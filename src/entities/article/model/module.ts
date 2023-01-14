@@ -156,7 +156,8 @@ export class ArticleModule {
 
     @Action()
     async fetchComments(slug: string): Promise<void> {
-        const comments = await commentApi.getComments(slug)
+        const comments = await commentApi.getList(slug)
+        // @ts-ignore
         this.addMultipleCommentsToCache({ slug, comments })
     }
 
@@ -165,10 +166,8 @@ export class ArticleModule {
         slug: ArticleSlug
         params: WrittenComment
     }): Promise<void> {
-        const comment = await commentApi.addComment(
-            payload.slug,
-            payload.params
-        )
+        const comment = await commentApi.add(payload.slug, payload.params)
+        // @ts-ignore
         this.addCommentToCache({ slug: payload.slug, comment })
     }
 
@@ -177,6 +176,6 @@ export class ArticleModule {
         slug: string
         commentId: number
     }): Promise<void> {
-        await commentApi.deleteComment(payload.slug, payload.commentId)
+        await commentApi.remove(payload.slug, payload.commentId)
     }
 }

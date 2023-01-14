@@ -4,7 +4,13 @@ import utils from "@/shared/lib/utils"
 const getList = async () => {
     await utils.debug.delay(2000)
 
-    return Object.values(ApiStoreMock.tags.pool).map(item => item.name)
+    const tags = new Set()
+
+    Object.values(ApiStoreMock.articles.pool).forEach(article => {
+        article.tagList.forEach(tag => tags.add(tag))
+    })
+
+    return [...tags]
 }
 
 const tagApiMock = {
