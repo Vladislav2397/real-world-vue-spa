@@ -1,4 +1,4 @@
-import { Action, Getter, State, Mutation } from "vuex-simple"
+import { Action, Getter, State, Mutation, useModule } from "vuex-simple"
 
 import {
     IUser,
@@ -11,6 +11,7 @@ import { ICurrentUser, IUserState } from "@/store/models"
 import { TransformICurrentUserToIUser } from "@/store/transformers/IUserTransformers"
 
 import userApi from "../api"
+import lib from "@/shared/lib"
 
 const AUTH_TOKEN_KEY = "realWorldAuthToken"
 
@@ -96,3 +97,5 @@ export class User implements IUserState {
         }
     }
 }
+
+export const useUserModule = lib.store.useVuexModuleFactory<User>("user")

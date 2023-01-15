@@ -1,7 +1,8 @@
-import { User as UserModule } from "./module"
+import { User as UserModule, useUserModule } from "./module"
 
 const userModel = {
     UserModule,
+    useUserModule,
 }
 
 export default userModel

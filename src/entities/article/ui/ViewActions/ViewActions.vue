@@ -67,9 +67,11 @@ export default class ArticleViewHeader extends Vue {
         }
     }
 
-    get User() {
-        return useModule(this.$store, ["user"]) as typeof userModel.UserModule
-    }
+    User = userModel.useUserModule(this.$store)
+
+    // get User() {
+    //     return useModule(this.$store, ["user"]) as any
+    // }
 
     get Profile() {
         return useModule(this.$store, ["profile"]) as any
