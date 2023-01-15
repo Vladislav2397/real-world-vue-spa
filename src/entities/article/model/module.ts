@@ -12,7 +12,6 @@ import {
 } from "@/services/realWorldApi/models"
 
 import { ArticleSlug, Article, UpdateArticle, WrittenArticle } from "../types"
-import { Profile } from "@/store/modules/Profile"
 
 export class ArticleModule {
     @State() pool: Record<string, Article> = {}
@@ -23,8 +22,10 @@ export class ArticleModule {
 
     // @State()
     // poolByTags: Record<string, string[]> = {}
+
     // @State()
     // active = null
+
     // @Mutation()
     // updatePool(pool: any) {
     //     this.pool = {
@@ -32,14 +33,17 @@ export class ArticleModule {
     //         ...pool,
     //     }
     // }
+
     // @Mutation()
     // updatePoolByTags(tag: string, slugs: string[]) {
     //     Vue.set(this.poolByTags, tag, slugs)
     // }
+
     // @Getter()
     // get articleBySlug() {
     //     return (slug: string) => this.pool[slug]
     // }
+
     // @Getter()
     // get articlesByTag() {
     //     return (tag: string) =>

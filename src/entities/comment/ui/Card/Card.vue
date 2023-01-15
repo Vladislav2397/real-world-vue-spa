@@ -11,10 +11,9 @@
             :to="linkTo"
             class="comment-author"
         ) {{ comment.author.username }}
-        span(class="date-posted") {{ commentDate }}
-        span(class="mod-options")
-            i(
-                class="ion-trash-a"
+        span.date-posted {{ commentDate }}
+        span.mod-options
+            i.ion-trash-a(
                 :disabled="isLoading"
                 @click="deleteComment"
             )
@@ -23,12 +22,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator"
+import { useModule } from "vuex-simple"
 
 import { IComment } from "@/services/realWorldApi/models"
-// import Article from "@/store/modules/Article"
-// import User from "@/store/modules/User"
+
 import DateUtils from "@/utils/DateUtils"
-import { useModule } from "vuex-simple"
 
 @Component
 export default class CommentDisplay extends Vue {
@@ -38,11 +36,11 @@ export default class CommentDisplay extends Vue {
     isLoading = false
 
     get Article() {
-        return useModule(this.$store, ['article']) as any
+        return useModule(this.$store, ["article"]) as any
     }
 
     get User() {
-        return useModule(this.$store, ['user']) as any
+        return useModule(this.$store, ["user"]) as any
     }
 
     get linkTo() {

@@ -1,24 +1,23 @@
 <template lang="pug">
 
-div
-    common-loader(
-        v-if="isLoading"
+common-loader(
+    v-if="isLoading"
+)
+div(
+    v-else
+)
+    comment-add(
+        :slug="slug"
+        @comment-added="refreshComments"
     )
-    template(
-        v-else
-    )
-        comment-add(
-            :slug="slug"
-            @comment-added="refreshComments"
-        )
-        comment-display(
-            v-for="comment in comments"
-            :key="comment.id"
-            :comment="comment"
-            :slug="slug"
+    comment-display(
+        v-for="comment in comments"
+        :key="comment.id"
+        :comment="comment"
+        :slug="slug"
 
-            @comment-deleted="refreshComments"
-        )
+        @comment-deleted="refreshComments"
+    )
 
 </template>
 

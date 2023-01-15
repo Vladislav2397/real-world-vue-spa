@@ -24,6 +24,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { useModule } from "vuex-simple"
+import VueInject from "vue-inject"
 
 import type { ArticleModule } from "@/features/article"
 
