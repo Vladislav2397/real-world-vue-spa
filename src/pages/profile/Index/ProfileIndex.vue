@@ -7,22 +7,20 @@ common-loader(
     v-else
 )
     .user-info: .container: .row: .col-xs-12.col-md-10.offset-md-1
-        img(
+        img.user-img(
             :src="profile.image"
-            class="user-img"
         )
         h4 {{ profile.username }}
         p {{ profile.bio }}
 
-        router-link(
+        router-link.btn.action-btn.btn-sm.btn-outline-secondary(
             v-if="isMyProfile"
             :to="{ name: $routesNames.profileSettings }"
-            class="btn action-btn btn-sm btn-outline-secondary"
         )
             i.ion-gear-a
             | Edit Profile Settings
         profile-follow-button(
-            v-else
+            v-else=""
             :username="author.username"
             :following="author.following"
         )
@@ -43,19 +41,17 @@ common-loader(
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { Route } from "vue-router"
-
-import CommonFeed, { IFeedTab } from "@/components/CommonFeed.vue"
-import CommonLoader from "@/components/CommonLoader.vue"
-import ProfileFollowButton from "@/components/ProfileFollowButton.vue"
-import IPagination, {
-    DEFAULT_ITEMS_PER_PAGE,
-    DEFAULT_START_PAGE,
-} from "@/services/common/IPagination"
-import { IArticleList, IProfile } from "@/services/realWorldApi/models"
-// import Article from "@/store/modules/Article"
-// import Profile from "@/store/modules/Profile"
-// import User from "@/store/modules/User"
 import { useModule } from "vuex-simple"
+
+import { Loader } from "@/shared/ui"
+
+import { ProfileFollowButton } from "@/features/ProfileFollowButton"
+
+import { ArticleList } from "@/widgets/article"
+
+import { DEFAULT_PER_PAGE, DEFAULT_START_PAGE } from "@/shared/config"
+import { IArticleList, IProfile } from "@/services/realWorldApi/models"
+import { userModel } from "@/entities/user"
 
 enum FeedType {
     Favorites = "favorites",
@@ -66,9 +62,9 @@ Component.registerHooks(["beforeRouteEnter", "beforeRouteUpdate"])
 
 @Component({
     components: {
-        CommonLoader,
-        CommonFeed,
-        ProfileFollowButton,
+        "common-loader": Loader,
+        "common-feed": ArticleList,
+        "profile-follow-button": ProfileFollowButton,
     },
     beforeRouteEnter(to, from, next) {
         next(vm => {
@@ -86,29 +82,29 @@ export default class ProfileIndex extends Vue {
     isLoading = false
     isFollowActionInProgress = false
     currentPage = DEFAULT_START_PAGE
-    itemsPerPage = DEFAULT_ITEMS_PER_PAGE
+    itemsPerPage = DEFAULT_PER_PAGE
 
     activeTabId: FeedType = FeedType.My
     activeFeed: IArticleList = { articles: [], articlesCount: 0 }
     activeTag: string | null = null
 
-    get Article() {
-        return useModule(this.$store, ['article']) as any
-    }
+    User = userModel.useUserModule(this.$store)
 
-    get User() {
-        return useModule(this.$store, ['user']) as any
+    get Article() {
+        return useModule(this.$store, ["article"]) as any
     }
 
     get Profile() {
-        return useModule(this.$store, ['profile']) as any
+        return useModule(this.$store, ["profile"]) as any
     }
 
     get profile(): IProfile {
-        return this.Profile.profilesCache[this._profile?.username] || this._profile
+        return (
+            this.Profile.profilesCache[this._profile?.username] || this._profile
+        )
     }
 
-    get tabs(): IFeedTab[] {
+    get tabs(): FeedTab[] {
         const myTitle = this.isMyProfile
             ? "My Articles"
             : `${this.profile.username}'s Articles`
@@ -193,7 +189,7 @@ export default class ProfileIndex extends Vue {
     async fetchFeed(): Promise<void> {
         this.isLoading = true
         try {
-            const pagination: IPagination = {
+            const pagination: Pagination = {
                 limit: this.itemsPerPage,
                 offset: (this.currentPage - 1) * this.itemsPerPage,
             }

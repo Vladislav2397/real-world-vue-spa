@@ -3,10 +3,14 @@
         <div class="feed-toggle">
             <ul class="nav nav-pills outline-active">
                 <li v-for="tab in tabs" :key="tab.id" class="nav-item">
-                    <a :class="[
-                        'nav-link',
-                        { active: activeTabId === tab.id },
-                    ]" href="#" @click.prevent="onTabChanged(tab.id)">
+                    <a
+                        :class="[
+                            'nav-link',
+                            { active: activeTabId === tab.id },
+                        ]"
+                        href="#"
+                        @click.prevent="onTabChanged(tab.id)"
+                    >
                         {{ tab.title }}
                     </a>
                 </li>
@@ -15,26 +19,38 @@
 
         <common-loader v-if="isLoading" />
 
-        <article-preview v-for="article in articles" v-else :key="article.slug" :article="article" />
+        <article-preview
+            v-for="article in articles"
+            v-else
+            :key="article.slug"
+            :article="article"
+        />
 
-        <div v-if="feed.articlesCount === 0 && !isLoading" class="article-preview">
+        <div
+            v-if="feed.articlesCount === 0 && !isLoading"
+            class="article-preview"
+        >
             No articles are here... yet.
         </div>
 
-        <common-pagination v-show="!isLoading" :total-items="feed.articlesCount" :items-per-page="itemsPerPage"
-            :current-page="currentPage" @page-changed="onPageChanged" />
+        <common-pagination
+            v-show="!isLoading"
+            :total-items="feed.articlesCount"
+            :items-per-page="itemsPerPage"
+            :current-page="currentPage"
+            @page-changed="onPageChanged"
+        />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from "vue-property-decorator"
+import { useModule } from "vuex-simple"
 
 import { Loader, Pagination } from "@/shared/ui"
-import { ArticlePreview } from '@/entities/article'
+import { ArticlePreview } from "@/entities/article"
 
 import { IArticle, IArticleList } from "@/services/realWorldApi/models"
-import { useModule } from "vuex-simple"
-// import Article from "@/store/modules/Article"
 
 export interface IFeedTab {
     id: string
@@ -43,9 +59,9 @@ export interface IFeedTab {
 
 @Component({
     components: {
-        'common-loader': Loader,
-        'common-pagination': Pagination,
-        'article-preview': ArticlePreview,
+        "common-loader": Loader,
+        "common-pagination": Pagination,
+        "article-preview": ArticlePreview,
     },
 })
 export default class CommonFeed extends Vue {
@@ -57,7 +73,7 @@ export default class CommonFeed extends Vue {
     @Prop({ required: true }) currentPage!: number
 
     get Article() {
-        return useModule(this.$store, ['article']) as any
+        return useModule(this.$store, ["article"]) as any
     }
 
     get articlesCache(): Record<string, IArticle> {
