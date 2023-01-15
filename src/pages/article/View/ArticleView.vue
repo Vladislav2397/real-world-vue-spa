@@ -38,14 +38,14 @@ import { marked } from "marked"
 import { Loader } from "@/shared/ui"
 import { CommentList } from "@/entities/comment"
 
-import ArticleViewActions from "@/components/ArticleViewActions.vue"
+import { ArticleViewActions } from "@/widgets/article"
 import { IArticle } from "@/services/realWorldApi/models"
 
 Component.registerHooks(["beforeRouteEnter", "beforeRouteUpdate"])
 
 @Component({
     components: {
-        ArticleViewActions,
+        "article-view-actions": ArticleViewActions,
         "common-loader": Loader,
         "article-comments": CommentList,
     },

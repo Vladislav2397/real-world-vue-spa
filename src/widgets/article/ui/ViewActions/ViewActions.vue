@@ -23,7 +23,7 @@ article-meta(
         v-else
     )
         router-link.btn.btn-outline-secondary.btn-sm(
-            :to="linkTo"
+            :to="toArticleEdit"
         )
             i.ion-edit
             | Edit Article
@@ -40,27 +40,25 @@ article-meta(
 import { Component, Emit, Prop, Vue } from "vue-property-decorator"
 import { useModule } from "vuex-simple"
 
-import { Meta } from "../Meta"
+import { userModel } from "@/entities/user"
+import { ArticleMeta } from "@/entities/article"
 
-// feature
-import ArticleFavoritesButton from "@/components/ArticleFavoritesButton.vue"
-// feature
-import ProfileFollowButton from "@/components/ProfileFollowButton.vue"
+import { ArticleFavoritesButton } from "@/features/article"
+import { ProfileFollowButton } from "@/features/ProfileFollowButton"
 
 import { IArticle, IProfile } from "@/services/realWorldApi/models"
-import { userModel } from "@/entities/user"
 
 @Component({
     components: {
-        "article-meta": Meta,
-        ArticleFavoritesButton,
-        ProfileFollowButton,
+        "article-meta": ArticleMeta,
+        "article-favorites-button": ArticleFavoritesButton,
+        "profile-follow-button": ProfileFollowButton,
     },
 })
 export default class ArticleViewHeader extends Vue {
     @Prop({ required: true }) article!: IArticle
 
-    get linkTo() {
+    get toArticleEdit() {
         return {
             name: this.$routesNames.articleEdit,
             params: { slug: this.article.slug },
@@ -68,10 +66,6 @@ export default class ArticleViewHeader extends Vue {
     }
 
     User = userModel.useUserModule(this.$store)
-
-    // get User() {
-    //     return useModule(this.$store, ["user"]) as any
-    // }
 
     get Profile() {
         return useModule(this.$store, ["profile"]) as any
