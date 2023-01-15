@@ -10,9 +10,8 @@
             :disabled="isLoading"
         )
             fieldset.form-group
-                input(
+                input.form-control(
                     v-model="image"
-                    class="form-control"
                     type="text"
                     placeholder="URL of profile picture"
                 )
@@ -25,31 +24,30 @@
                     required="true"
                 )
             fieldset.form-group
-                textarea(
+                textarea.form-control.form-control-lg(
                     v-model="bio"
-                    class="form-control form-control-lg"
                     rows="8"
                     placeholder="Short bio about you"
                 )
             fieldset.form-group
-                input(
+                input.form-control.form-control-lg(
                     v-model="email"
-                    class="form-control form-control-lg"
                     type="email"
                     placeholder="Email"
                     required="true"
                 )
             fieldset.form-group
-                input(
+                input.form-control.form-control-lg(
                     v-model="password"
-                    class="form-control form-control-lg"
                     type="password"
                     placeholder="New password"
                 )
-            common-loader(v-if="isLoading" :size="5")
-            button(
-                v-else
-                class="btn btn-lg btn-primary pull-xs-right"
+            common-loader(
+                v-if="isLoading"
+                :size="5"
+            )
+            button.btn.btn-lg.btn-primary.pull-xs-right(
+                v-else=""
                 @click="updateSettings"
             ) Update Settings
     hr
@@ -62,17 +60,17 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator"
 
-import CommonErrorsList from "@/components/CommonErrorsList.vue"
-import CommonLoader from "@/components/CommonLoader.vue"
+import { ErrorList, Loader } from "@/shared/ui"
+
+import { userModel } from "@/entities/user"
+
 import { ICurrentUser } from "@/store/models"
-// import User from "@/store/modules/User"
 import { isArrayOfStrings } from "@/utils/ArrayUtils"
-import { useModule } from "vuex-simple"
 
 @Component({
     components: {
-        CommonLoader,
-        CommonErrorsList,
+        "common-loader": Loader,
+        "common-errors-list": ErrorList,
     },
 })
 export default class ProfileSettings extends Vue {
@@ -85,9 +83,7 @@ export default class ProfileSettings extends Vue {
     username = ""
     errors?: string[] = []
 
-    get User() {
-        return useModule(this.$store, ['user']) as any
-    }
+    User = userModel.useUserModule(this.$store)
 
     get hasErrors(): boolean {
         return !!this.errors?.length
