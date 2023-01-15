@@ -16,7 +16,7 @@ export class RootModule {
     comment = new commentModel.CommentModule()
 
     @Module()
-    article = new ArticleModule()
+    article = new ArticleModule(this)
 
     @Module()
     profile = new Profile()

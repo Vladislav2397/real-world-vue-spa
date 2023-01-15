@@ -18,7 +18,7 @@ common-loader(
             :to="{ name: $routesNames.profileSettings }"
         )
             i.ion-gear-a
-            | Edit Profile Settings
+            | &nbsp;Edit Profile Settings
         profile-follow-button(
             v-else=""
             :username="author.username"
@@ -98,11 +98,7 @@ export default class ProfileIndex extends Vue {
         return useModule(this.$store, ["profile"]) as any
     }
 
-    get profile(): IProfile {
-        return (
-            this.Profile.profilesCache[this._profile?.username] || this._profile
-        )
-    }
+    profile = null as unknown as IProfile
 
     get tabs(): FeedTab[] {
         const myTitle = this.isMyProfile
@@ -135,8 +131,9 @@ export default class ProfileIndex extends Vue {
         try {
             const toUserName = to?.params?.username
             const fromUserName = from?.params?.username
+
             if (!toUserName) {
-                this.$router.push({ name: this.$routesNames.home })
+                await this.$router.push({ name: this.$routesNames.home })
                 return
             }
             if (toUserName !== fromUserName) {
@@ -144,6 +141,7 @@ export default class ProfileIndex extends Vue {
             }
 
             const tabId = to?.params?.tabId
+
             if (
                 tabId &&
                 Object.values(FeedType).some(v => (v as string) === tabId)
@@ -153,11 +151,14 @@ export default class ProfileIndex extends Vue {
                 this.activeTabId = FeedType.My
             }
 
+            console.log("fetch feed")
             await this.fetchFeed()
+            console.log("end try")
         } catch (e) {
             this.$router.push({ name: this.$routesNames.home })
         } finally {
             this.isLoading = false
+            console.log("finally")
         }
     }
 
@@ -193,6 +194,15 @@ export default class ProfileIndex extends Vue {
                 limit: this.itemsPerPage,
                 offset: (this.currentPage - 1) * this.itemsPerPage,
             }
+
+            console.log(this.Profile, this._profile)
+
+            this.profile = this.Profile.profilesCache[this._profile.username]
+
+            console.log(
+                "profile from cache",
+                this.Profile.profilesCache[this._profile.username]
+            )
 
             switch (this.activeTabId) {
                 case FeedType.Favorites:

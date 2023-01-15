@@ -12,11 +12,14 @@ import {
 } from "@/services/realWorldApi/models"
 
 import { ArticleSlug, Article, UpdateArticle, WrittenArticle } from "../types"
+import { Profile } from "@/store/modules/Profile"
 
 export class ArticleModule {
     @State() pool: Record<string, Article> = {}
 
     @State() commentPool: Record<string, Record<number, Comment>> = {}
+
+    constructor(private root: any) {}
 
     // @State()
     // poolByTags: Record<string, string[]> = {}
@@ -60,7 +63,7 @@ export class ArticleModule {
         if (!cachedArticle || article.updatedAt >= cachedArticle.updatedAt) {
             Vue.set(this.pool, article.slug, article)
         }
-        // Profile.addProfileToCache(article.author)
+        this.root.profile.addProfileToCache(article.author)
     }
 
     @Mutation()
@@ -73,7 +76,7 @@ export class ArticleModule {
             payload.comment.id,
             payload.comment
         )
-        // Profile.addProfileToCache(payload.comment.author)
+        this.root.profile.addProfileToCache(payload.comment.author)
     }
 
     @Action()

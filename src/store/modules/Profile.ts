@@ -1,5 +1,5 @@
 import Vue from "vue"
-import { Action, Mutation } from "vuex-simple"
+import { Action, Getter, Mutation, State } from "vuex-simple"
 
 import { IProfile } from "@/services/realWorldApi/models"
 import {
@@ -9,8 +9,10 @@ import {
 } from "@/services/realWorldApi/RealWorldApiProfile"
 
 export class Profile {
+    @State()
     private _profilesCache: Record<string, IProfile> = {}
 
+    @Getter()
     get profilesCache(): Record<string, IProfile> {
         return this._profilesCache
     }

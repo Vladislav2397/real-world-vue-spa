@@ -1,7 +1,7 @@
 <template lang="pug">
 
 .editor-page: .container.page: .row: .col-md-10.offset-md-1.col-xs-12
-    common-errors-list(
+    common-error-list(
         :errors="errors"
     )
 
@@ -54,7 +54,6 @@
 </template>
 
 <script lang="ts">
-// @/widgets/article/ui
 import { Component, Prop, Vue } from "vue-property-decorator"
 import { useModule } from "vuex-simple"
 
