@@ -1,20 +1,22 @@
 <template lang="pug">
 
-auth-page(:mode="mode")
+auth-page(
+    :mode="mode"
+)
 
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 
-import AuthPage, { AuthPageMode } from "@/components/AuthPage.vue"
+import { Page, PageMode } from "../Page"
 
 @Component({
     components: {
-        AuthPage,
+        "auth-page": Page,
     },
 })
 export default class AuthLogin extends Vue {
-    mode: Readonly<AuthPageMode> = AuthPageMode.Login
+    mode: Readonly<PageMode> = PageMode.Login
 }
 </script>
