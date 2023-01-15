@@ -7,11 +7,11 @@ article-editor
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 
-import ArticleEditor from "@/components/ArticleEditor.vue"
+import { ArticleForm } from "@/features/article"
 
 @Component({
     components: {
-        ArticleEditor,
+        "article-editor": ArticleForm,
     },
 })
 export default class ArticleCreate extends Vue {}

@@ -1,26 +1,31 @@
 <template lang="pug">
 
-common-loader(v-if="isLoading")
-article-editor(v-else :article="article")
+common-loader(
+    v-if="isLoading"
+)
+article-editor(
+    v-else
+    :article="article"
+)
 
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { Route } from "vue-router"
-
-import ArticleEditor from "@/components/ArticleEditor.vue"
-import CommonLoader from "@/components/CommonLoader.vue"
-import { IArticle } from "@/services/realWorldApi/models"
 import { useModule } from "vuex-simple"
-// import Article from "@/store/modules/Article"
+
+import { Loader } from "@/shared/ui"
+import { ArticleForm } from "@/features/article"
+
+import { IArticle } from "@/services/realWorldApi/models"
 
 Component.registerHooks(["beforeRouteEnter", "beforeRouteUpdate"])
 
 @Component({
     components: {
-        CommonLoader,
-        ArticleEditor,
+        "common-loader": Loader,
+        "article-editor": ArticleForm,
     },
     beforeRouteEnter(to, from, next) {
         next(vm => {
@@ -38,7 +43,7 @@ export default class ArticleEdit extends Vue {
     article: IArticle | null = null
 
     get Article() {
-        return useModule(this.$store, ['article']) as any
+        return useModule(this.$store, ["article"]) as any
     }
 
     async onRouteUpdate(
