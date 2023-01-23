@@ -13,42 +13,26 @@ import {
 
 import { ArticleSlug, Article, UpdateArticle, WrittenArticle } from "../types"
 
+const createArticle = () => ({
+    title: "",
+    description: "",
+    body: "",
+    tagList: [],
+})
+
 export class ArticleModule {
+    root: any
+
     @State() pool: Record<string, Article> = {}
 
     @State() commentPool: Record<string, Record<number, Comment>> = {}
 
-    constructor(private root: any) {}
+    constructor(root: any) {
+        this.root = root
+    }
 
-    // @State()
-    // poolByTags: Record<string, string[]> = {}
-
-    // @State()
-    // active = null
-
-    // @Mutation()
-    // updatePool(pool: any) {
-    //     this.pool = {
-    //         ...this.pool,
-    //         ...pool,
-    //     }
-    // }
-
-    // @Mutation()
-    // updatePoolByTags(tag: string, slugs: string[]) {
-    //     Vue.set(this.poolByTags, tag, slugs)
-    // }
-
-    // @Getter()
-    // get articleBySlug() {
-    //     return (slug: string) => this.pool[slug]
-    // }
-
-    // @Getter()
-    // get articlesByTag() {
-    //     return (tag: string) =>
-    //         this.poolByTags[tag].map(slug => this.pool[slug])
-    // }
+    @State()
+    newArticle = createArticle()
 
     @Getter()
     get articlesCache(): Record<string, Article> {

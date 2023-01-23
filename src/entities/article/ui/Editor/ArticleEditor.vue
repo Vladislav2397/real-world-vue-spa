@@ -1,75 +1,70 @@
 <template lang="pug">
 
-.editor-page
-    .container.page
-        .row
-            .col-md-10.offset-md-1.col-xs-12
-                common-errors-list(:errors="errors")
+.editor-page: .container.page: .row: .col-md-10.offset-md-1.col-xs-12
+    common-errors-list(:errors="errors")
 
-                form
-                    fieldset(:disabled="isLoading")
-                        fieldset.form-group
-                            input(
-                                v-model="title"
-                                type="text"
-                                class="form-control form-control-lg"
-                                placeholder="Article Title"
-                                required="true"
-                            )
-                        fieldset.form-group
-                            input(
-                                v-model="description"
-                                type="text"
-                                class="form-control"
-                                placeholder="What's this article about?"
-                                required="true"
-                            )
-                        fieldset.form-group
-                            textarea(
-                                v-model="body"
-                                class="form-control"
-                                rows="8"
-                                placeholder="Write your article (in markdown)"
-                                required="true"
-                            )
-                        fieldset.form-group
-                            input(
-                                v-model="tagList"
-                                type="text"
-                                class="form-control"
-                                placeholder="Enter tags"
-                                required="true"
-                            )
-                            .tag-list
-                                span.tag-default.tag-pill.ng-binding.ng-scope(
-                                    v-for="tag in existingTagList"
-                                    :key="tag"
-                                )
-                                    i.ion-close-round(
-                                        @click="removeTag(tag)"
-                                    )
-                                    | &nbsp;{{ tag }}
-                        button(
-                            class="btn btn-lg pull-xs-right btn-primary"
-                            type="button"
-                            @click="publish"
-                        ) Publish Article
+    form
+        fieldset(
+            :disabled="isLoading"
+        )
+            fieldset.form-group
+                input.form-control.form-control-lg(
+                    v-model="title"
+                    type="text"
+                    placeholder="Article Title"
+                    required="true"
+                )
+            fieldset.form-group
+                input.form-control(
+                    v-model="description"
+                    type="text"
+                    placeholder="What's this article about?"
+                    required="true"
+                )
+            fieldset.form-group
+                textarea.form-control(
+                    v-model="body"
+                    rows="8"
+                    placeholder="Write your article (in markdown)"
+                    required="true"
+                )
+            fieldset.form-group
+                input.form-control(
+                    v-model="tagList"
+                    type="text"
+                    placeholder="Enter tags"
+                    required="true"
+                )
+                .tag-list
+                    span.tag-default.tag-pill.ng-binding.ng-scope(
+                        v-for="tag in existingTagList"
+                        :key="tag"
+                    )
+                        i.ion-close-round(
+                            @click="removeTag(tag)"
+                        )
+                        | &nbsp;{{ tag }}
+            button.btn.btn-lg.pull-xs-right.btn-primary(
+                type="button"
+                @click="publish"
+            ) Publish Article
 
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator"
+import { useModule } from "vuex-simple"
 
-import CommonErrorsList from "@/components/CommonErrorsList.vue"
+import { ErrorList } from "@/shared/ui"
+
 import { IArticle } from "@/services/realWorldApi/models"
 // import Article from "@/store/modules/Article"
 import { isArrayOfStrings } from "@/utils/ArrayUtils"
 import { notifySuccess } from "@/utils/NotificationUtils"
-import { useModule } from "vuex-simple"
 
 @Component({
     components: {
-        CommonErrorsList,
+        "common-errors-list": ErrorList,
     },
 })
 export default class ArticleEditor extends Vue {
@@ -88,7 +83,7 @@ export default class ArticleEditor extends Vue {
     errors: string[] = []
 
     get Article() {
-        return useModule(this.$store, ['article']) as any
+        return useModule(this.$store, ["article"]) as any
     }
 
     removeTag(tag: string): void {
