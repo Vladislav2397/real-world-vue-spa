@@ -1,4 +1,5 @@
 import Vue from "vue"
+import { getField, updateField } from "vuex-map-fields"
 
 import articleApi from "../api"
 
@@ -13,7 +14,7 @@ import {
 
 import { ArticleSlug, Article, UpdateArticle, WrittenArticle } from "../types"
 
-const createArticle = () => ({
+const createArticle = (): WrittenArticle => ({
     title: "",
     description: "",
     body: "",
@@ -31,8 +32,30 @@ export class ArticleModule {
         this.root = root
     }
 
-    @State()
-    newArticle = createArticle()
+    @State() active = createArticle()
+
+    @Getter()
+    get getField() {
+        return getField(this)
+    }
+
+    @Mutation()
+    updateField = updateField
+
+    // @Getter()
+    // get active() {
+    //     return this._active
+    // }
+
+    // @Mutation()
+    // updateActive(active: any) {
+    //     this._active = active
+    // }
+
+    @Mutation()
+    resetActive() {
+        this.active = createArticle()
+    }
 
     @Getter()
     get articlesCache(): Record<string, Article> {
@@ -107,12 +130,12 @@ export class ArticleModule {
     }
 
     @Action()
-    async create(params: WrittenArticle): Promise<Article> {
-        const res = await articleApi.create(params)
+    async create(): Promise<Article> {
+        const article = await articleApi.create(this.active)
 
-        this.addArticleToCache(res)
+        this.addArticleToCache(article)
 
-        return res
+        return article
     }
 
     @Action()
@@ -147,7 +170,7 @@ export class ArticleModule {
 
     @Action()
     async fetchComments(slug: string): Promise<void> {
-        const comments = await commentApi.getList(slug)
+        const comments = (await commentApi.getList(slug)) ?? []
         // @ts-ignore
         this.addMultipleCommentsToCache({ slug, comments })
     }

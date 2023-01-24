@@ -1,6 +1,7 @@
 import articles from "./article.mock.json"
 import comments from "./comment.mock.json"
 import users from "./user.mock.json"
+import articleStoreApiMock from "@/shared/api/mock/article"
 
 type Articles = {
     pool: Record<
@@ -51,6 +52,7 @@ type Users = {
 }
 
 const ApiStoreMock = {
+    articleStoreApiMock,
     articles: articles as Articles,
     comments: comments as Comments,
     users: users as Users,

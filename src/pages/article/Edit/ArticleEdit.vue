@@ -16,7 +16,7 @@ import { Route } from "vue-router"
 import { useModule } from "vuex-simple"
 
 import { Loader } from "@/shared/ui"
-import { ArticleForm } from "@/features/article"
+import { ArticleEditor } from "@/entities/article"
 
 import { IArticle } from "@/services/realWorldApi/models"
 
@@ -25,7 +25,7 @@ Component.registerHooks(["beforeRouteEnter", "beforeRouteUpdate"])
 @Component({
     components: {
         "common-loader": Loader,
-        "article-editor": ArticleForm,
+        "article-editor": ArticleEditor,
     },
     beforeRouteEnter(to, from, next) {
         next(vm => {

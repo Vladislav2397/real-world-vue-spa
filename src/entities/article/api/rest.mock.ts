@@ -81,17 +81,36 @@ const articleApiMock: ArticleApi = {
         }
     },
     async create(params) {
-        const article = getArticleBySlug("1")
-        const articleAuthor = ApiStoreMock.users.pool[article.author]
+        console.log("articleApiMock.create", params)
 
-        return {
-            ...article,
+        const currentDate = new Date()
+        const { length: slug } = Object.keys(ApiStoreMock.articles.pool)
+
+        const article = {
             ...params,
+            createdAt: currentDate,
+            updatedAt: currentDate,
+            favorited: false,
+            comments: [],
+            favoritesCount: 0,
+            slug: `${slug + 1}`,
+            tagList: params.tagList ?? [],
             author: {
-                ...articleAuthor,
                 following: false,
+                username: "vladislav",
+                image: null,
+                bio: null,
             },
         }
+
+        ApiStoreMock.articleStoreApiMock.actions.create({
+            ...article,
+            author: article.author.username,
+            createdAt: article.createdAt.toString(),
+            updatedAt: article.updatedAt.toString(),
+        })
+
+        return article
     },
     async update(slug, params) {
         const article = getArticleBySlug(slug)

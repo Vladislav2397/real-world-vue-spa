@@ -1,17 +1,17 @@
 <template lang="pug">
 
-article-editor
+create-article-form
 
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 
-import { ArticleForm } from "@/features/article"
+import { CreateArticleForm } from "@/features/article"
 
 @Component({
     components: {
-        "article-editor": ArticleForm,
+        "create-article-form": CreateArticleForm,
     },
 })
 export default class ArticleCreate extends Vue {}
