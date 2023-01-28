@@ -1,7 +1,9 @@
 import { IArticle } from "@/services/realWorldApi/models"
 
-import ApiStoreMock from "@/shared/api/mock"
-import utils from "@/shared/lib/utils"
+import ApiStoreMock, { articleStoreApiMock } from "@/shared/api/mock"
+import lib from "@/shared/lib"
+
+const { utils } = lib
 
 import { ArticleApi } from "./rest.types"
 
@@ -83,6 +85,10 @@ const articleApiMock: ArticleApi = {
     async create(params) {
         console.log("articleApiMock.create", params)
 
+        if (!params.title || !params.body || !params.tagList?.length) {
+            throw new Error("Article is not valid")
+        }
+
         const currentDate = new Date()
         const { length: slug } = Object.keys(ApiStoreMock.articles.pool)
 
@@ -103,7 +109,7 @@ const articleApiMock: ArticleApi = {
             },
         }
 
-        ApiStoreMock.articleStoreApiMock.actions.create({
+        articleStoreApiMock.actions.create({
             ...article,
             author: article.author.username,
             createdAt: article.createdAt.toString(),
@@ -115,6 +121,11 @@ const articleApiMock: ArticleApi = {
     async update(slug, params) {
         const article = getArticleBySlug(slug)
         const articleAuthor = ApiStoreMock.users.pool[article.author]
+
+        articleStoreApiMock.actions.update({
+            slug,
+            ...params,
+        })
 
         return {
             ...article,
@@ -129,6 +140,8 @@ const articleApiMock: ArticleApi = {
         const article = getArticleBySlug(slug)
         const articleAuthor = ApiStoreMock.users.pool[article.author]
 
+        articleStoreApiMock.actions.remove(slug)
+
         return {
             ...article,
             author: {
@@ -140,6 +153,8 @@ const articleApiMock: ArticleApi = {
     async addToFavorites(slug) {
         const article = getArticleBySlug(slug)
         const articleAuthor = ApiStoreMock.users.pool[article.author]
+
+        articleStoreApiMock.actions.addToFavorite(slug)
 
         return {
             ...article,
@@ -155,10 +170,12 @@ const articleApiMock: ArticleApi = {
         const article = getArticleBySlug(slug)
         const articleAuthor = ApiStoreMock.users.pool[article.author]
 
+        articleStoreApiMock.actions.removeFromFavorite(slug)
+
         return {
             ...article,
             favorited: false,
-            favoritesCount: article.favoritesCount,
+            // favoritesCount: article.favoritesCount,
             author: {
                 ...articleAuthor,
                 following: false,

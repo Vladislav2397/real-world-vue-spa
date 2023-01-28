@@ -12,7 +12,7 @@ article-editor(
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { Route } from "vue-router"
+import { NavigationGuardNext, Route } from "vue-router"
 import { useModule } from "vuex-simple"
 
 import { Loader } from "@/shared/ui"
@@ -49,23 +49,42 @@ export default class ArticleEdit extends Vue {
     async onRouteUpdate(
         to: Route,
         from: Route,
-        next: () => void
+        next: NavigationGuardNext
     ): Promise<void> {
         next()
+        // this.isLoading = true
+        // try {
+        //     const toSlug = to?.params?.slug
+        //     const fromSlug = from?.params?.slug
+        //
+        //     if (!toSlug) {
+        //         // this.$router.push({ name: this.$routesNames.home })
+        //         next({ name: this.$routesNames.home })
+        //         // return
+        //     }
+        //     if (toSlug !== fromSlug || !this.article) {
+        //         await this.Article.fetchSingle(toSlug)
+        //         this.article = this.Article.articlesCache[toSlug]
+        //     }
+        // } catch (e) {
+        //     // this.$router.push({ name: this.$routesNames.home })
+        //     next({ name: this.$routesNames.home })
+        // } finally {
+        //     this.isLoading = false
+        // }
+    }
+
+    created() {
         this.isLoading = true
+
         try {
-            const toSlug = to?.params?.slug
-            const fromSlug = from?.params?.slug
-            if (!toSlug) {
-                this.$router.push({ name: this.$routesNames.home })
-                return
-            }
-            if (toSlug !== fromSlug || !this.article) {
-                await this.Article.fetchSingle(toSlug)
-                this.article = this.Article.articlesCache[toSlug]
-            }
-        } catch (e) {
-            this.$router.push({ name: this.$routesNames.home })
+            const { slug } = this.$route.params
+
+            if (!slug) return
+
+            this.Article.fetchSingle(slug)
+        } catch (error) {
+            console.log(error)
         } finally {
             this.isLoading = false
         }

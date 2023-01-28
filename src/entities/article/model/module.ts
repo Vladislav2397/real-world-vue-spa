@@ -42,15 +42,10 @@ export class ArticleModule {
     @Mutation()
     updateField = updateField
 
-    // @Getter()
-    // get active() {
-    //     return this._active
-    // }
-
-    // @Mutation()
-    // updateActive(active: any) {
-    //     this._active = active
-    // }
+    @Mutation()
+    updateActive(active: WrittenArticle) {
+        this.active = active
+    }
 
     @Mutation()
     resetActive() {
@@ -108,6 +103,7 @@ export class ArticleModule {
     @Action()
     async fetchSingle(slug: ArticleSlug): Promise<void> {
         const res = await articleApi.getItem(slug)
+        this.updateActive(res)
         this.addArticleToCache(res)
     }
 

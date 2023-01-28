@@ -1,9 +1,6 @@
-import articles from "./json/article.mock.json"
-import comments from "./json/comment.mock.json"
-import users from "./json/user.mock.json"
-
-import articleStoreApiMock from "./article"
-import commentStoreApiMock from "./comment"
+import articles from "./article.mock.json"
+import comments from "./comment.mock.json"
+import users from "./user.mock.json"
 
 type Articles = {
     pool: Record<
@@ -54,13 +51,9 @@ type Users = {
 }
 
 const ApiStoreMock = {
-    articleStoreApiMock,
-    commentStoreApiMock,
     articles: articles as Articles,
     comments: comments as Comments,
     users: users as Users,
 }
-
-export { articleStoreApiMock, commentStoreApiMock }
 
 export default ApiStoreMock

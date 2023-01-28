@@ -1,20 +1,30 @@
-// import { Action } from "vuex-simple"
-import { articleModel } from "@/entities/article"
+import { Action } from "vuex-simple"
+import { articleApi, articleModel } from "@/entities/article"
+import { notifyErrors, notifySuccess } from "@/utils/NotificationUtils"
 
 export class ArticleModule extends articleModel.ArticleModule {
-    // @Action()
-    // create() {
-    //     const slug = "some-1"
-    //
-    //     // work with data
-    //
-    //     // @ts-ignore
-    //     this.updatePool({
-    //         [slug]: {
-    //             slug,
-    //         },
-    //     })
-    // }
+    notifier = {
+        notifySuccess,
+        notifyErrors,
+    }
+
+    @Action()
+    async create() {
+        try {
+            const article = await articleApi.create(this.active)
+
+            this.addArticleToCache(article)
+
+            this.notifier.notifySuccess(
+                "Article was successfully created, redirecting..."
+            )
+
+            return article
+        } catch (error) {
+            this.notifier.notifyErrors(["Article was not created"])
+            throw new Error("Article was not created")
+        }
+    }
     //
     // @Action()
     // update() {

@@ -10,17 +10,21 @@ article-editor
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-
-import { ArticleEditor } from "@/entities/article"
 import { useModule } from "vuex-simple"
 import { isArrayOfStrings } from "@/utils/ArrayUtils"
 
-@Component({
-    components: { ArticleEditor },
-})
-export default class CreateArticleForm extends Vue {
+@Component
+export default class UpdateArticleForm extends Vue {
     isLoading = false
     errors: string[] = []
+
+    created() {
+        const { slug } = this.$route.params
+
+        if (!slug) return
+
+        this.Article.getItem(slug)
+    }
 
     get Article() {
         return useModule(this.$store, ["article"]) as any
@@ -38,7 +42,7 @@ export default class CreateArticleForm extends Vue {
 
         this.isLoading = true
         try {
-            const article = await this.Article.create()
+            const article = await this.Article.update()
 
             await this.toArticleView(article.slug)
         } catch (e) {

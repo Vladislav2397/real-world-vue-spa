@@ -61,9 +61,6 @@ import { ErrorList } from "@/shared/ui"
 
 import { IArticle } from "@/services/realWorldApi/models"
 import { ArticleModule } from "@/entities/article/model"
-// import Article from "@/store/modules/Article"
-// import { isArrayOfStrings } from "@/utils/ArrayUtils"
-// import { notifySuccess } from "@/utils/NotificationUtils"
 
 const { mapFields } = createHelpers({
     getterType: "article/getField",
