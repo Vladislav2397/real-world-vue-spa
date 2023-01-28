@@ -1,101 +1,206 @@
-let wrapper: HTMLElement
-let scroller: HTMLElement
+type Handlers = "onTouchStart" | "onTouchMove" | "onTouchEnd"
+const mapHandlers: Record<
+    symbol,
+    Record<Handlers, (event: TouchEvent) => void>
+> = {}
 
-function setGesture(wrapperEl: HTMLElement, scrollerEl: HTMLElement) {
-    wrapper = wrapperEl
-    scroller = scrollerEl
+// ===== pure functions =====
+
+function getPositionY(el: HTMLElement) {
+    return el.getBoundingClientRect().y
+}
+function getTouchMovePosition(event: TouchEvent) {
+    const touch = event.touches?.[0]
+
+    return touch?.screenY ?? 0
 }
 
-let isTop = true
-let initialPositionY: number | null = null
-
-function getTranslateStyle(posY: number, unit = "px") {
-    return `transform: translateY(${posY}${unit})`
+type Unit = "px" | "%"
+function getTransformStyle(posY: number, unit: Unit = "px") {
+    return `translateY(${posY}${unit})`
 }
-function getTransitionStyle() {
-    return `transition: transform ${_options.closeDuration}ms ease`
+function getTransitionStyle(duration = 200) {
+    return `transform ${duration}ms ease`
 }
 
-let _options: Options
+function setElementTransform(el: HTMLElement, y: number, unit?: Unit) {
+    el.style.setProperty("transform", getTransformStyle(y, unit))
+}
+function setElementTransition(el: HTMLElement, duration?: number) {
+    el.style.setProperty("transition", getTransitionStyle(duration))
+}
+function removeElementProperty(el: HTMLElement, property: string) {
+    el.style.removeProperty(property)
+}
+
+// ==========================
+
 type Options = {
     closableOffset: number
     closeDuration: number
+    onAfterClose?: () => void
     onClose: () => void
 }
 
-function setup(options: Options) {
-    wrapper.addEventListener("touchmove", onTouchMove, { passive: true })
-    wrapper.addEventListener("touchstart", onTouchStart)
-    wrapper.addEventListener("touchend", onTouchEnd)
+class MovableManager {
+    private readonly wrapper: HTMLElement
+    private readonly scroller: HTMLElement
+    private readonly options: Options
 
-    _options = options
-}
-function setWrapperTranslate(posY: number, unit = "px") {
-    if (Number.isNaN(posY)) return
-    if (posY < 0) return
+    private initialTopPosition = 0
+    private isTopPosition = true
 
-    // @ts-ignore
-    wrapper.style = `transform: translateY(${posY}${unit})`
-}
-function setWrapperTransition(posY: number, unit = "px") {
-    // @ts-ignore
-    wrapper.style = `transform: translateY(${posY}${unit}); transition: transform ${_options.closeDuration}ms ease`
-}
-function setWrapperClose() {
-    setWrapperTransition(100, "%")
+    private initialMovablePosition = 0
+    private movablePosition = 0
 
-    const timeout = setTimeout(() => {
-        _options.onClose()
-        clearTimeout(timeout)
-    }, _options.closeDuration)
-}
-function setWrapperBackOpen() {
-    setWrapperTransition(0)
-}
+    // Key mapHandlers for add and remove touch handlers
+    private readonly handlerKey: symbol
 
-let initialMovablePosition: number
-let movableDelta = 0
+    constructor(
+        wrapperEl: HTMLElement,
+        scrollerEl: HTMLElement,
+        options: Options
+    ) {
+        this.handlerKey = Symbol()
 
-function onTouchStart(event: any) {
-    initialMovablePosition = getTouchMovePosition(event)
+        this.wrapper = wrapperEl
+        this.scroller = scrollerEl
+        this.options = options
 
-    if (initialPositionY === null) return
-
-    const { y: posY } = scroller.getBoundingClientRect()
-
-    isTop = posY >= initialPositionY
-}
-function onTouchEnd(event: any) {
-    // initialMovablePosition = 0
-    if (movableDelta > _options.closableOffset) {
-        setWrapperClose()
-    } else {
-        setWrapperBackOpen()
-    }
-}
-function onTouchMove(event: any) {
-    const { y: posY } = scroller.getBoundingClientRect()
-
-    if (!initialPositionY) {
-        initialPositionY = posY
+        this.addEvents(this.wrapper)
+        this.setInitialPositionY(this.scroller)
     }
 
-    if (isTop) {
-        movableDelta = getTouchMovePosition(event) - initialMovablePosition
-    } else {
-        movableDelta = 0
+    public closeMove() {
+        this.setClosableStyle()
+
+        const { onClose, closeDuration } = this.options
+
+        this.options.onAfterClose?.()
+        const timeout = setTimeout(() => {
+            onClose()
+            clearTimeout(timeout)
+        }, closeDuration + 50)
     }
 
-    if (isTop && movableDelta > 0) {
-        setWrapperTranslate(movableDelta)
+    public destroy() {
+        this.removeEvents(this.wrapper)
     }
 
-    console.log("event", isTop, movableDelta)
-}
-function getTouchMovePosition(event: any) {
-    const touch = event.touches[0]
+    private setInitialPositionY(el: HTMLElement) {
+        const posY = getPositionY(el)
 
-    return touch.screenY
+        if (!this.initialTopPosition && !Number.isNaN(posY)) {
+            this.initialTopPosition = posY
+        }
+    }
+
+    private addEvents(el: HTMLElement) {
+        const onTouchStart = this.onTouchStart.bind(this)
+        const onTouchMove = this.onTouchMove.bind(this)
+        const onTouchEnd = this.onTouchEnd.bind(this)
+
+        mapHandlers[this.handlerKey] = { onTouchStart, onTouchMove, onTouchEnd }
+
+        el.addEventListener("touchstart", onTouchStart)
+        el.addEventListener("touchmove", onTouchMove, { passive: true })
+        el.addEventListener("touchend", onTouchEnd)
+    }
+    private removeEvents(el: HTMLElement) {
+        const { onTouchStart, onTouchMove, onTouchEnd } =
+            mapHandlers[this.handlerKey]
+
+        el.removeEventListener("touchstart", onTouchStart)
+        el.removeEventListener("touchmove", onTouchMove)
+        el.removeEventListener("touchend", onTouchEnd)
+    }
+
+    private updateIsTopPosition() {
+        const posY = getPositionY(this.scroller)
+
+        this.isTopPosition = posY >= this.initialTopPosition
+    }
+
+    private updateInitialMovablePosition(event: TouchEvent) {
+        this.initialMovablePosition = getTouchMovePosition(event)
+    }
+
+    private onTouchStart(event: TouchEvent) {
+        this.updateInitialMovablePosition(event)
+        this.updateIsTopPosition()
+    }
+
+    private onTouchMove(event: TouchEvent) {
+        this.updateMovablePosition(event)
+
+        if (this.isTopPosition && this.movablePosition > 0) {
+            this.setMovableStyle()
+        }
+
+        console.log("event", this.isTopPosition, this.movablePosition)
+    }
+
+    private onTouchEnd() {
+        if (this.movablePosition > this.options.closableOffset) {
+            this.closeMove()
+        } else {
+            this.setOpenedStyle()
+        }
+    }
+
+    // FIXME: Maybe split logic with styles into separated class
+    private setTransform(y: number, unit?: Unit) {
+        setElementTransform(this.wrapper, y, unit)
+    }
+    private setTransition(duration?: number) {
+        const { closeDuration } = this.options
+
+        setElementTransition(this.wrapper, duration ?? closeDuration)
+    }
+    private clearTransition() {
+        removeElementProperty(this.wrapper, "transition")
+    }
+    private setClosableStyle() {
+        this.setTransform(100, "%")
+        this.setTransition()
+    }
+    private setOpenedStyle() {
+        this.setTransform(0)
+        this.setTransition()
+    }
+    private setMovableStyle() {
+        this.setTransform(this.movablePosition)
+        this.clearTransition()
+    }
+
+    private updateMovablePosition(event: TouchEvent) {
+        if (this.isTopPosition) {
+            this.movablePosition =
+                getTouchMovePosition(event) - this.initialMovablePosition
+        } else {
+            this.movablePosition = 0
+        }
+    }
 }
 
-export { setGesture, setup }
+class GestureMove {
+    manager: MovableManager
+
+    constructor(
+        wrapperEl: HTMLElement,
+        scrollerEl: HTMLElement,
+        options: Options
+    ) {
+        this.manager = new MovableManager(wrapperEl, scrollerEl, options)
+    }
+
+    destroy() {
+        this.manager.destroy()
+    }
+
+    close() {
+        this.manager.closeMove()
+    }
+}
+
+export { GestureMove }

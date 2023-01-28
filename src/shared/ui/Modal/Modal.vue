@@ -1,8 +1,17 @@
 <template lang="pug">
 
 .modal
+    transition(
+        name="fade"
+        duration="300"
+    )
+        .modal__overlay(
+            v-if="isVisible"
+            @click.stop="onClickOverlay"
+        )
     .modal__wrapper(
         ref="wrapper"
+        @click.prevent.stop
         data-scroll-lock-scrollable
     )
         .modal__scroll(
@@ -21,7 +30,7 @@
 
 <script lang="ts">
 import { Component, Emit, Ref, Vue } from "vue-property-decorator"
-import { setGesture, setup } from "./gesture"
+import { GestureMove } from "./gesture"
 
 @Component
 export default class Modal extends Vue {
@@ -32,13 +41,25 @@ export default class Modal extends Vue {
         return
     }
 
+    onClickOverlay() {
+        this.gestureMove?.close()
+    }
+
+    gestureMove: GestureMove | null = null
+
     mounted() {
-        setGesture(this.wrapperRef, this.scrollerRef)
-        setup({
-            closeDuration: 200,
+        this.gestureMove = new GestureMove(this.wrapperRef, this.scrollerRef, {
+            closeDuration: 300,
             closableOffset: 200,
+            onAfterClose: this.onAfterClose,
             onClose: this.onClose,
         })
+    }
+
+    isVisible = true
+
+    onAfterClose() {
+        this.isVisible = false
     }
 
     onClose() {
