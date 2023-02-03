@@ -1,4 +1,4 @@
-import { Action, Getter, State, Mutation, useModule } from "vuex-simple"
+import { Action, Getter, State, Mutation } from "vuex-simple"
 
 import {
     IUser,
@@ -12,10 +12,28 @@ import { TransformICurrentUserToIUser } from "@/store/transformers/IUserTransfor
 
 import userApi from "../api"
 import lib from "@/shared/lib"
+import { FetchArticleService } from "@/shared/model"
 
 const AUTH_TOKEN_KEY = "realWorldAuthToken"
 
 export class User implements IUserState {
+    constructor() {
+        FetchArticleService.registerSubscribe("fetchList", payload => {
+            const users = payload.map((article: any) => article.author)
+            this.updatePool(users)
+        })
+    }
+
+    @State() pool = {}
+
+    @Mutation()
+    updatePool(users: any[]) {
+        this.pool = {
+            ...this.pool,
+            ...Object.fromEntries(users.map(user => [user.username, user])),
+        }
+    }
+
     @State()
     private _currentUser: ICurrentUser | null = null
 

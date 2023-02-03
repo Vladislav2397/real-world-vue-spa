@@ -1,19 +1,6 @@
-import { User } from "@/entities/user"
+import { Article, ArticleSlug } from "@/shared/domain"
 
-export type ArticleSlug = string
-
-export type Article = {
-    slug: ArticleSlug
-    title: string
-    description: string
-    body: string
-    tagList: string[]
-    createdAt: DateTime
-    updatedAt: DateTime
-    favorited: boolean
-    favoritesCount: number
-    author: User
-}
+export type { Article, ArticleSlug }
 
 /**
  * ```ts

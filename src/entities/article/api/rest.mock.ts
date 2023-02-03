@@ -1,5 +1,6 @@
 import { IArticle } from "@/services/realWorldApi/models"
 
+import { Article, ArticleSlug } from "@/shared/domain"
 import ApiStoreMock, { articleStoreApiMock } from "@/shared/api/mock"
 import lib from "@/shared/lib"
 

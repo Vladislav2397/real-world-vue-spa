@@ -116,7 +116,7 @@ export default class AuthPage extends Vue {
                       email: this.email,
                       password: this.password,
                   })
-            this.$router.push({ name: this.$routesNames.home })
+            await this.$router.push({ name: this.$routesNames.home })
         } catch (e) {
             if (isArrayOfStrings(e)) {
                 this.errors = e as string[]

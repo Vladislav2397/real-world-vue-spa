@@ -1,3 +1,4 @@
+import { ArticleSlug } from "@/shared/domain"
 import articles from "./json/article.mock.json"
 import comments from "./json/comment.mock.json"
 import users from "./json/user.mock.json"

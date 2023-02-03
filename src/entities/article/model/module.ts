@@ -13,6 +13,7 @@ import {
 } from "@/services/realWorldApi/models"
 
 import { ArticleSlug, Article, UpdateArticle, WrittenArticle } from "../types"
+import { FetchArticleService } from "@/shared/model"
 
 const createArticle = (): WrittenArticle => ({
     title: "",
@@ -30,6 +31,10 @@ export class ArticleModule {
 
     constructor(root: any) {
         this.root = root
+
+        FetchArticleService.registerSubscribe("fetchList", payload =>
+            this.addMultipleArticlesToCache(payload)
+        )
     }
 
     @State() active = createArticle()
@@ -69,7 +74,7 @@ export class ArticleModule {
         if (!cachedArticle || article.updatedAt >= cachedArticle.updatedAt) {
             Vue.set(this.pool, article.slug, article)
         }
-        this.root.profile.addProfileToCache(article.author)
+        // this.root.profile.addProfileToCache(article.author)
     }
 
     @Mutation()
@@ -120,8 +125,11 @@ export class ArticleModule {
 
     @Action()
     async getList(params: IArticleGetListRequestParams): Promise<IArticleList> {
+        const service = new FetchArticleService()
+        await service.fetchList()
+
         const res = await articleApi.getList(params)
-        this.addMultipleArticlesToCache(res.articles)
+        // this.addMultipleArticlesToCache(res.articles)
         return res
     }
 
